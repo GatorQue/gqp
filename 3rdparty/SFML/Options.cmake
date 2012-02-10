@@ -13,6 +13,19 @@ set_option(SFML_REVISION_TAG "" STRING "Which 'SFML' revision/tag to use?")
 set_option(SFML_BUILD_DOCS TRUE BOOL "Build 'SFML' documentation?")
 set_option(SFML_BUILD_EXAMPLES FALSE BOOL "Build 'SFML' examples?")
 
+# Determine which URL to use to obtain the SFML source files
+if(SFML_USE_LATEST)
+  set_option(SFML_URL
+    "https://github.com/LaurentGomila/SFML.git"
+    STRING
+    "Git URL for getting latest 'SFML' version")
+else(SFML_USE_LATEST)
+  set_option(SFML_URL
+    "http://gqe.googlecode.com/files/SFML-1.6.2-cmake.zip"
+    STRING
+    "URL for getting older 'SFML' version")
+endif(SFML_USE_LATEST)
+
 # Add our directory to the EXTERNAL_ARGS list for the projects to use later
 set(EXTERNAL_ARGS ${EXTERNAL_ARGS}
-  -DSFMLDIR:PATH=${CMAKE_SOURCE_DIR}/external)
+  -DSFMLDIR:PATH=${EXTERNAL_DIR})

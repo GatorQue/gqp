@@ -12,22 +12,21 @@
 project(${EXTERNAL_NAME})
 
 # Define CMake arguments for copying build results to central directory
-set(CLONE_DIR ${PROJECT_BINARY_DIR}/glew)
 set(COPY_BIN
     -E copy_directory
-    ${CLONE_DIR}/bin
+    ${PROJECT_BINARY_DIR}/${PROJECT_NAME}/bin
     ${CMAKE_BINARY_DIR}/bin)
 set(COPY_LIB
     -E copy_directory
-    ${CLONE_DIR}/lib
+    ${PROJECT_BINARY_DIR}/${PROJECT_NAME}/lib
     ${CMAKE_BINARY_DIR}/lib)
 set(COPY_INCLUDE
     -E copy_directory
-    ${CLONE_DIR}/include
+    ${PROJECT_BINARY_DIR}/${PROJECT_NAME}/include
     ${CMAKE_BINARY_DIR}/include)
 set(COPY_DOC
     -E copy_directory
-    ${CLONE_DIR}/doc
+    ${PROJECT_BINARY_DIR}/${PROJECT_NAME}/doc
     ${CMAKE_BINARY_DIR}/doc/GLEW)
 
 # Create Download script to download the precompiled GLEW libraries
@@ -46,7 +45,7 @@ endif(TARGET_ARCH_32BITS)
 # Create Extract script to extract the files downloaded
 ScriptExtractFile(${PROJECT_BINARY_DIR}/extract.cmake
   "${PROJECT_BINARY_DIR}/glew.zip"
-  ${CLONE_DIR})
+  ${PROJECT_BINARY_DIR}/${PROJECT_NAME})
 
 # Add custom target for this 3rdparty/external library
 add_custom_target(${PROJECT_NAME} DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-complete)

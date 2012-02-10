@@ -29,15 +29,6 @@ include(${CMAKE_SOURCE_DIR}/cmake/Functions.cmake)
 # Include the top level options to be used by all projects
 include(${CMAKE_SOURCE_DIR}/cmake/Options.cmake)
 
-# Include the top level configuration rules to be used by all projects
-include(${CMAKE_SOURCE_DIR}/cmake/Config.cmake)
-
-# Define the TOUCH directory for dependency handling
-set(TOUCH_DIR ${CMAKE_BINARY_DIR}/touch)
-
-# Create the TOUCH directory
-file(MAKE_DIRECTORY ${TOUCH_DIR})
-
 # Add the external/3rd party directory first
 add_subdirectory(3rdparty)
 

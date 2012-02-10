@@ -14,4 +14,4 @@ set_option(GLEW_BUILD_DOCS TRUE BOOL "Build 'GLEW' documentation?")
 
 # Add our directory to the EXTERNAL_ARGS list for the projects to use later
 set(EXTERNAL_ARGS ${EXTERNAL_ARGS}
-  -DGLEWDIR:PATH=${CMAKE_SOURCE_DIR}/external)
+  -DGLEWDIR:PATH=${EXTERNAL_DIR})

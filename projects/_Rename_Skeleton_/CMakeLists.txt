@@ -39,9 +39,6 @@ include(${TOPLEVEL_DIR}/cmake/Functions.cmake)
 # Include the top level options to be used by all projects
 include(${TOPLEVEL_DIR}/cmake/Options.cmake)
 
-# Include the top level configuration rules to be used by all projects
-include(${TOPLEVEL_DIR}/cmake/Config.cmake)
-
 # Include our options file
 include(${CMAKE_CURRENT_LIST_DIR}/Options.cmake)
 
@@ -95,7 +92,7 @@ endif(${PROJECT_NAME}_LIBS)
 add_custom_command(TARGET ${PROJECT_NAME}
   POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory
-  ${EXTERNAL_DIR}/bin
+  ${EXTERNAL_BIN_DIR}
   ${PROJECT_BINARY_DIR}/${CMAKE_CFG_INTDIR})
 
 # Copy resources folder to build directory after build

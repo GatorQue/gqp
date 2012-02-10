@@ -16,7 +16,6 @@ else(SFML_SHARED_LIBRARIES)
 endif(SFML_SHARED_LIBRARIES)
 
 # Define CMake arguments for configuring both versions
-set(CLONE_DIR ${PROJECT_BINARY_DIR}/gqe)
 set(CONFIG_GQE_DEBUG
   -DINSTALL_DOC:BOOL=false
   -DBUILD_EXAMPLES:BOOL=${GQE_BUILD_EXAMPLES}
@@ -26,7 +25,7 @@ set(CONFIG_GQE_DEBUG
   -DCMAKE_BUILD_TYPE:STRING=Debug
   -DCMAKE_INSTALL_PREFIX=${PROJECT_BINARY_DIR}
   -G${CMAKE_GENERATOR}
-  ${CLONE_DIR})
+  ${PROJECT_BINARY_DIR}/${PROJECT_NAME})
 set(CONFIG_GQE_RELEASE
   -DINSTALL_DOC:BOOL=${GQE_BUILD_DOCS}
   -DBUILD_EXAMPLES:BOOL=${GQE_BUILD_EXAMPLES}
@@ -36,7 +35,7 @@ set(CONFIG_GQE_RELEASE
   -DCMAKE_BUILD_TYPE:STRING=Release
   -DCMAKE_INSTALL_PREFIX=${PROJECT_BINARY_DIR}
   -G${CMAKE_GENERATOR}
-  ${CLONE_DIR})
+  ${PROJECT_BINARY_DIR}/${PROJECT_NAME})
 
 # Define CMake arguments for copying building both versions
 set(BUILD_GQE_DEBUG
@@ -74,8 +73,8 @@ set(COPY_EXAMPLES
 
 # Create Script to clone GQE library
 ScriptCloneMercurial(${PROJECT_BINARY_DIR}/clone.cmake
-  "https://RyanLindeman@code.google.com/p/gqe"
-  ${CLONE_DIR}
+  ${GQE_URL}
+  ${PROJECT_BINARY_DIR}/${PROJECT_NAME}
   ${GQE_REVISION_TAG})
 
 # Add custom target for this 3rdparty/external library
@@ -88,30 +87,30 @@ add_custom_command(
   OUTPUT ${TOUCH_DIR}/${PROJECT_NAME}-complete
   COMMENT "Completed getting, building, and installing 'GQE'"
   COMMAND ${CMAKE_COMMAND} -E touch ${TOUCH_DIR}/${PROJECT_NAME}-complete
-  DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-mkdir
-  DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-clone
+  DEPENDS ${PROJECT_BINARY_DIR}/${PROJECT_NAME}
+  DEPENDS ${PROJECT_BINARY_DIR}/debug
+  DEPENDS ${PROJECT_BINARY_DIR}/release
   DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-debug
   DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-release
   DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-install
   VERBATIM)
 
-# Add a custom command to create the library build folders
+# Add a custom command to download the Mercurial repository
 add_custom_command(
-  OUTPUT ${TOUCH_DIR}/${PROJECT_NAME}-mkdir
-  COMMENT "Making 'GQE' build directories"
-  COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DIR}/debug
-  COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DIR}/release
-  COMMAND ${CMAKE_COMMAND} -E touch ${TOUCH_DIR}/${PROJECT_NAME}-mkdir
+  OUTPUT ${PROJECT_BINARY_DIR}/${PROJECT_NAME}
+  COMMAND ${CMAKE_COMMAND} -P ${PROJECT_BINARY_DIR}/clone.cmake
+  COMMAND ${CMAKE_COMMAND} -E remove_directory ${PROJECT_BINARY_DIR}/debug
+  COMMAND ${CMAKE_COMMAND} -E remove_directory ${PROJECT_BINARY_DIR}/release
   WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
   VERBATIM)
 
-# Add a custom command to download the Mercurial repository
+# Add a custom command to create the debug library build folder
 add_custom_command(
-  OUTPUT ${TOUCH_DIR}/${PROJECT_NAME}-clone
-  COMMAND ${CMAKE_COMMAND} -P ${PROJECT_BINARY_DIR}/clone.cmake
-  COMMAND ${CMAKE_COMMAND} -E touch ${TOUCH_DIR}/${PROJECT_NAME}-clone
+  OUTPUT ${PROJECT_BINARY_DIR}/debug
+  COMMENT "Making 'GQE' debug build directory"
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DIR}/debug
   WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
-  DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-mkdir
+  DEPENDS ${PROJECT_BINARY_DIR}/${PROJECT_NAME}
   VERBATIM)
 
 # Build a debug build of the library
@@ -122,8 +121,17 @@ add_custom_command(
   COMMAND ${CMAKE_COMMAND} ${BUILD_GQE_DEBUG} --target install
   COMMAND ${CMAKE_COMMAND} -E touch ${TOUCH_DIR}/${PROJECT_NAME}-debug
   WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/debug
-  DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-mkdir
-  DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-clone
+  DEPENDS ${PROJECT_BINARY_DIR}/${PROJECT_NAME}
+  DEPENDS ${PROJECT_BINARY_DIR}/debug
+  VERBATIM)
+
+# Add a custom command to create the release library build folder
+add_custom_command(
+  OUTPUT ${PROJECT_BINARY_DIR}/release
+  COMMENT "Making 'GQE' release build directory"
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DIR}/release
+  WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+  DEPENDS ${PROJECT_BINARY_DIR}/${PROJECT_NAME}
   VERBATIM)
 
 # Build a release build of the library
@@ -136,8 +144,8 @@ if(GQE_BUILD_DOCS)
     COMMAND ${CMAKE_COMMAND} ${BUILD_GQE_RELEASE} --target install
     COMMAND ${CMAKE_COMMAND} -E touch ${TOUCH_DIR}/${PROJECT_NAME}-release
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/release
-    DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-mkdir
-    DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-clone
+    DEPENDS ${PROJECT_BINARY_DIR}/${PROJECT_NAME}
+    DEPENDS ${PROJECT_BINARY_DIR}/release
     VERBATIM)
 else(GQE_BUILD_DOCS)
   add_custom_command(
@@ -147,8 +155,8 @@ else(GQE_BUILD_DOCS)
     COMMAND ${CMAKE_COMMAND} ${BUILD_GQE_RELEASE} --target install
     COMMAND ${CMAKE_COMMAND} -E touch ${TOUCH_DIR}/${PROJECT_NAME}-release
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/release
-    DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-mkdir
-    DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-clone
+    DEPENDS ${PROJECT_BINARY_DIR}/${PROJECT_NAME}
+    DEPENDS ${PROJECT_BINARY_DIR}/release
     VERBATIM)
 endif(GQE_BUILD_DOCS)
 
@@ -165,8 +173,9 @@ add_custom_command(
   COMMAND ${CMAKE_COMMAND} ${COPY_EXAMPLES}
   COMMAND ${CMAKE_COMMAND} -E touch ${TOUCH_DIR}/${PROJECT_NAME}-install
   WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
-  DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-mkdir
-  DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-clone
+  DEPENDS ${PROJECT_BINARY_DIR}/${PROJECT_NAME}
+  DEPENDS ${PROJECT_BINARY_DIR}/debug
+  DEPENDS ${PROJECT_BINARY_DIR}/release
   DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-debug
   DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-release
   VERBATIM)

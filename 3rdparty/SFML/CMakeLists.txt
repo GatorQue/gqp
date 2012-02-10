@@ -9,7 +9,6 @@
 project(${EXTERNAL_NAME})
 
 # Define CMake arguments for configuring both versions
-set(CLONE_DIR ${PROJECT_BINARY_DIR}/sfml)
 set(CONFIG_SFML_DEBUG
   -DBUILD_DOC:BOOL=FALSE
   -DBUILD_EXAMPLES:BOOL=${SFML_BUILD_EXAMPLES}
@@ -17,7 +16,7 @@ set(CONFIG_SFML_DEBUG
   -DCMAKE_BUILD_TYPE:STRING=Debug
   -DCMAKE_INSTALL_PREFIX=${PROJECT_BINARY_DIR}
   -G${CMAKE_GENERATOR}
-  ${CLONE_DIR})
+  ${PROJECT_BINARY_DIR}/${PROJECT_NAME})
 set(CONFIG_SFML_RELEASE
   -DBUILD_DOC:BOOL=${SFML_BUILD_DOCS}
   -DBUILD_EXAMPLES:BOOL=${SFML_BUILD_EXAMPLES}
@@ -25,7 +24,7 @@ set(CONFIG_SFML_RELEASE
   -DCMAKE_BUILD_TYPE:STRING=Release
   -DCMAKE_INSTALL_PREFIX=${PROJECT_BINARY_DIR}
   -G${CMAKE_GENERATOR}
-  ${CLONE_DIR})
+  ${PROJECT_BINARY_DIR}/${PROJECT_NAME})
 
 # Define CMake arguments for building both versions
 set(BUILD_SFML_DEBUG
@@ -62,36 +61,69 @@ set(COPY_EXAMPLES
     ${CMAKE_BINARY_DIR}/examples/SFML)
 
 # Add custom target for this 3rdparty/external library
-add_custom_target(${PROJECT_NAME} DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-complete)
+add_custom_target(${PROJECT_NAME}
+  DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-complete)
 
 # Add the complete step first that depends on all the other steps
 add_custom_command(
   OUTPUT ${TOUCH_DIR}/${PROJECT_NAME}-complete
   COMMENT "Completed 'SFML'"
   COMMAND ${CMAKE_COMMAND} -E touch ${TOUCH_DIR}/${PROJECT_NAME}-complete
-  DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-mkdir
-  DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-get
+  DEPENDS ${PROJECT_BINARY_DIR}/${PROJECT_NAME}
+  DEPENDS ${PROJECT_BINARY_DIR}/debug
+  DEPENDS ${PROJECT_BINARY_DIR}/release
   DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-debug
   DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-release
   DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-install
   VERBATIM)
 
-# Add a custom command to create the library build folders
-add_custom_command(
-  OUTPUT ${TOUCH_DIR}/${PROJECT_NAME}-mkdir
-  COMMENT "Making 'SFML' build directories"
-  COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DIR}/debug
-  COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DIR}/release
-  COMMAND ${CMAKE_COMMAND} -E touch ${TOUCH_DIR}/${PROJECT_NAME}-mkdir
-  WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
-  VERBATIM)
-
 # Grab the correct 'sfml-get' custom command based on version desired
 if(SFML_USE_LATEST)
-  include(${CMAKE_CURRENT_LIST_DIR}/SFML-2pX.cmake)
+  # Create Script to clone SFML library
+  ScriptCloneGit(${PROJECT_BINARY_DIR}/clone.cmake
+    ${SFML_URL}
+    ${PROJECT_BINARY_DIR}/${PROJECT_NAME}
+    ${SFML_REVISION_TAG})
+
+  # Add a custom command to clone the GIT repository
+  add_custom_command(
+    OUTPUT ${PROJECT_BINARY_DIR}/${PROJECT_NAME}
+    COMMAND ${CMAKE_COMMAND} -P ${PROJECT_BINARY_DIR}/clone.cmake
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${PROJECT_BINARY_DIR}/debug
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${PROJECT_BINARY_DIR}/release
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+    VERBATIM)
 else(SFML_USE_LATEST)
-  include(${CMAKE_CURRENT_LIST_DIR}/SFML-1p6.cmake)
+  # Create Script to download older SFML version source files
+  ScriptDownloadFile(${PROJECT_BINARY_DIR}/download.cmake
+    ${SFML_URL}
+    ${PROJECT_BINARY_DIR}/sfml.zip
+    30)
+
+  # Create Script to extract older SFML version source files
+  ScriptExtractFile(${PROJECT_BINARY_DIR}/extract.cmake
+    ${PROJECT_BINARY_DIR}/sfml.zip
+    ${PROJECT_BINARY_DIR}/${PROJECT_NAME})
+
+  # Add a custom command to download and extract older SFML version
+  add_custom_command(
+    OUTPUT ${PROJECT_BINARY_DIR}/${PROJECT_NAME}
+    COMMAND ${CMAKE_COMMAND} -P ${PROJECT_BINARY_DIR}/download.cmake
+    COMMAND ${CMAKE_COMMAND} -P ${PROJECT_BINARY_DIR}/extract.cmake
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${PROJECT_BINARY_DIR}/debug
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${PROJECT_BINARY_DIR}/release
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+    VERBATIM)
 endif(SFML_USE_LATEST)
+
+# Add a custom command to create the debug library build folder
+add_custom_command(
+  OUTPUT ${PROJECT_BINARY_DIR}/debug
+  COMMENT "Making 'SFML' debug build directory"
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DIR}/debug
+  WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+  DEPENDS ${PROJECT_BINARY_DIR}/${PROJECT_NAME}
+  VERBATIM)
 
 # Build a debug build of the library
 add_custom_command(
@@ -101,8 +133,17 @@ add_custom_command(
   COMMAND ${CMAKE_COMMAND} ${BUILD_SFML_DEBUG} --target install
   COMMAND ${CMAKE_COMMAND} -E touch ${TOUCH_DIR}/${PROJECT_NAME}-debug
   WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/debug
-  DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-mkdir
-  DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-get
+  DEPENDS ${PROJECT_BINARY_DIR}/${PROJECT_NAME}
+  DEPENDS ${PROJECT_BINARY_DIR}/debug
+  VERBATIM)
+
+# Add a custom command to create the release library build folder
+add_custom_command(
+  OUTPUT ${PROJECT_BINARY_DIR}/release
+  COMMENT "Making 'SFML' release build directory"
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DIR}/release
+  WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+  DEPENDS ${PROJECT_BINARY_DIR}/${PROJECT_NAME}
   VERBATIM)
 
 # Build a release build of the library
@@ -115,8 +156,8 @@ if(SFML_BUILD_DOCS)
     COMMAND ${CMAKE_COMMAND} ${BUILD_SFML_RELEASE} --target install
     COMMAND ${CMAKE_COMMAND} -E touch ${TOUCH_DIR}/${PROJECT_NAME}-release
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/release
-    DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-mkdir
-    DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-get
+    DEPENDS ${PROJECT_BINARY_DIR}/${PROJECT_NAME}
+    DEPENDS ${PROJECT_BINARY_DIR}/release
     VERBATIM)
 else(SFML_BUILD_DOCS)
   add_custom_command(
@@ -126,8 +167,8 @@ else(SFML_BUILD_DOCS)
     COMMAND ${CMAKE_COMMAND} ${BUILD_SFML_RELEASE} --target install
     COMMAND ${CMAKE_COMMAND} -E touch ${TOUCH_DIR}/${PROJECT_NAME}-release
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/release
-    DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-mkdir
-    DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-get
+    DEPENDS ${PROJECT_BINARY_DIR}/${PROJECT_NAME}
+    DEPENDS ${PROJECT_BINARY_DIR}/release
     VERBATIM)
 endif(SFML_BUILD_DOCS)
 
@@ -144,8 +185,9 @@ add_custom_command(
   COMMAND ${CMAKE_COMMAND} ${COPY_EXAMPLES}
   COMMAND ${CMAKE_COMMAND} -E touch ${TOUCH_DIR}/${PROJECT_NAME}-install
   WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
-  DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-mkdir
-  DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-get
+  DEPENDS ${PROJECT_BINARY_DIR}/${PROJECT_NAME}
+  DEPENDS ${PROJECT_BINARY_DIR}/debug
+  DEPENDS ${PROJECT_BINARY_DIR}/release
   DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-debug
   DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-release
   VERBATIM)

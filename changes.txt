@@ -1,3 +1,7 @@
+Version 0.2.0
+==============
+- Bug fixes for TOPLEVEL_DIR and other option issues
+
 Version 0.1.0
 ==============
 - Initial beta release of working project

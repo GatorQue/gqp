@@ -45,23 +45,23 @@ foreach(SUBPROJECT_CMAKE_DIR ${SUBPROJECT_CMAKES})
     # Create a custom target for this subproject
     add_custom_target(${SUBPROJECT_NAME} ALL
       DEPENDS external
-      DEPENDS "${TOUCH_DIR}/${SUBPROJECT_NAME}-complete")
+      DEPENDS ${TOUCH_DIR}/${SUBPROJECT_NAME}-complete)
 
     # Add this subprojects 3rdparty dependencies so they will be built
-    foreach(SUBPROJECT_PACKAGE ${${SUBPROJECT_NAME}_3RDPARTY_DEPENDS})
-      message(STATUS "${SUBPROJECT_CMAKE_DIR} requires the '${SUBPROJECT_PACKAGE}' 3rdparty/external library")
+    foreach(EXTERNAL_PACKAGE ${${SUBPROJECT_NAME}_3RDPARTY_DEPENDS})
+      message(STATUS "${SUBPROJECT_CMAKE_DIR} requires the '${EXTERNAL_PACKAGE}' 3rdparty/external library")
 
-      # Add the 3rdparty/external libraries this subproject needs
-      add_dependencies(${SUBPROJECT_NAME} ${SUBPROJECT_PACKAGE})
+      # Add the 3rdparty/external libraries as an external dependency
+      add_dependencies(external ${EXTERNAL_PACKAGE})
     endforeach()
 
     # Add the complete dependency step command next
     add_custom_command(
-      OUTPUT "${TOUCH_DIR}/${SUBPROJECT_NAME}-complete"
-      COMMAND ${CMAKE_COMMAND} -E touch "${TOUCH_DIR}/${SUBPROJECT_NAME}-complete"
+      OUTPUT ${TOUCH_DIR}/${SUBPROJECT_NAME}-complete
+      COMMAND ${CMAKE_COMMAND} -E touch ${TOUCH_DIR}/${SUBPROJECT_NAME}-complete
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
       DEPENDS ${PROJECT_BINARY_DIR}/${SUBPROJECT_CMAKE_DIR}
-      DEPENDS "${TOUCH_DIR}/${SUBPROJECT_NAME}-build"
+      DEPENDS ${PROJECT_BINARY_DIR}/${SUBPROJECT_CMAKE_DIR}/CMakeCache.txt
       VERBATIM)
 
     # Add a custom command to create the output directory
@@ -74,7 +74,7 @@ foreach(SUBPROJECT_CMAKE_DIR ${SUBPROJECT_CMAKES})
 
     # Add a custom command to configure this subproject
     add_custom_command(
-      OUTPUT "${TOUCH_DIR}/${SUBPROJECT_NAME}-build"
+      OUTPUT ${PROJECT_BINARY_DIR}/${SUBPROJECT_CMAKE_DIR}/CMakeCache.txt
       COMMENT "Configuring and building the '${SUBPROJECT_CMAKE_DIR}' project"
       COMMAND ${CMAKE_COMMAND}
         ${EXTERNAL_ARGS}
@@ -88,7 +88,6 @@ foreach(SUBPROJECT_CMAKE_DIR ${SUBPROJECT_CMAKES})
       COMMAND ${CMAKE_COMMAND}
         --build ${PROJECT_BINARY_DIR}/${SUBPROJECT_CMAKE_DIR}
         --config ${CMAKE_CFG_INTDIR} ${${SUBPROJECT_NAME}_BUILD_ARGS}
-      COMMAND ${CMAKE_COMMAND} -E touch "${TOUCH_DIR}/${SUBPROJECT_NAME}-build"
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${SUBPROJECT_CMAKE_DIR}
       DEPENDS ${PROJECT_BINARY_DIR}/${SUBPROJECT_CMAKE_DIR}
       VERBATIM)
