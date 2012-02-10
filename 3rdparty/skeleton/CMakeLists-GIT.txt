@@ -1,0 +1,31 @@
+# Filename: CMakeLists-GIT.txt
+# Description: Skeleton example to be used for GIT based 3rd party library
+#   you want to include in your project. Copy this skeleton directory and
+#   rename it. Rename this file as CMakeLists.txt and adjust the POST BUILD
+#   copy commands below to copy the (includes, binaries, and libraries) to
+#   the external libraries folder as shown below.
+# Modification Log:
+# 2012-01-03 Initial version
+#
+
+# This file requires CMake version 2.8
+cmake_minimum_required(VERSION 2.8)
+
+# Give this 3rd party skeleton download, configure, install project a name
+project(GetSkeleton)
+
+# Define the install directory as a subdirectory of this folder
+set(Skeleton_PREFIX "${PROJECT_BINARY_DIR}")
+set(Skeleton_INSTALL_DIR "${PROJECT_BINARY_DIR}")
+set(Skeleton_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${Skeleton_INSTALL_DIR})
+
+# Add this External Skeleton project
+ExternalProject_Add(GetSkeleton
+  PREFIX ${Skeleton_PREFIX}
+  GIT_REPOSITORY https://github.com/Skeleton/Skeleton.git
+  INSTALL_DIR ${Skeleton_INSTALL_DIR}
+  CMAKE_ARGS ${Skeleton_CMAKE_ARGS}
+)
+
+# Create some special copy rules to transfer the files from this Skeleton
+# project to the external directory for use with our system.
