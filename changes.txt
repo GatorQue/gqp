@@ -1,3 +1,8 @@
+Version 0.4.0
+==============
+- Initial release to Google Code project site
+- Documentation updates and tutorials
+
 Version 0.3.0
 ==============
 - Bug fixes for Visual Studio linker issues
