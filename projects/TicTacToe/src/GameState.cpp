@@ -10,6 +10,7 @@
 #include "GameState.hpp"
 #include <GQE/Core/assets/ImageAsset.hpp>
 #include <GQE/Core/classes/App.hpp>
+#include <SFML/Graphics/Color.hpp>
 
 GameState::GameState(GQE::App* theApp) :
   GQE::IState("Game",theApp),

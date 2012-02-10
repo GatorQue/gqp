@@ -61,7 +61,7 @@ foreach(SUBPROJECT_CMAKE_DIR ${SUBPROJECT_CMAKES})
       COMMAND ${CMAKE_COMMAND} -E touch ${TOUCH_DIR}/${SUBPROJECT_NAME}-complete
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
       DEPENDS ${PROJECT_BINARY_DIR}/${SUBPROJECT_CMAKE_DIR}
-      DEPENDS ${PROJECT_BINARY_DIR}/${SUBPROJECT_CMAKE_DIR}/CMakeCache.txt
+      DEPENDS ${TOUCH_DIR}/${SUBPROJECT_NAME}-build
       VERBATIM)
 
     # Add a custom command to create the output directory
@@ -74,7 +74,7 @@ foreach(SUBPROJECT_CMAKE_DIR ${SUBPROJECT_CMAKES})
 
     # Add a custom command to configure this subproject
     add_custom_command(
-      OUTPUT ${PROJECT_BINARY_DIR}/${SUBPROJECT_CMAKE_DIR}/CMakeCache.txt
+      OUTPUT ${TOUCH_DIR}/${SUBPROJECT_NAME}-build
       COMMENT "Configuring and building the '${SUBPROJECT_CMAKE_DIR}' project"
       COMMAND ${CMAKE_COMMAND}
         ${EXTERNAL_ARGS}

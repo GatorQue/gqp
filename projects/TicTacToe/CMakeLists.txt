@@ -60,6 +60,16 @@ foreach(EXTERNAL_PACKAGE ${${PROJECT_NAME}_3RDPARTY_DEPENDS})
   # Add the include directories to our list of include directories
   include_directories(${${EXTERNAL_PACKAGE}_INCLUDE_DIR})
 
+  # Add the definitions to our list of definitions
+  if(${EXTERNAL_PACKAGE}_DEFINITIONS)
+    add_definitions(${${EXTERNAL_PACKAGE}_DEFINITIONS})
+  endif(${EXTERNAL_PACKAGE}_DEFINITIONS)
+
+  # See if definitions were passed as an argument to CMake
+  if(${EXTERNAL_PACKAGE}_DEFS)
+    add_definitions(${${EXTERNAL_PACKAGE}_DEFS})
+  endif(${EXTERNAL_PACKAGE}_DEFS)
+
   # Add these libraries to our list of dependencies
   set(${PROJECT_NAME}_LIBS ${${PROJECT_NAME}_LIBS} ${${EXTERNAL_PACKAGE}_LIBRARIES})
 endforeach()

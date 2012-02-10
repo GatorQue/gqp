@@ -26,6 +26,19 @@ else(SFML_USE_LATEST)
     "URL for getting older 'SFML' version")
 endif(SFML_USE_LATEST)
 
-# Add our directory to the EXTERNAL_ARGS list for the projects to use later
-set(EXTERNAL_ARGS ${EXTERNAL_ARGS}
-  -DSFMLDIR:PATH=${EXTERNAL_DIR})
+# Add internal options if SFML is enabled
+if(SFML_ENABLED)
+  # Add our directory to the EXTERNAL_ARGS list for the projects to use later
+  set(EXTERNAL_ARGS ${EXTERNAL_ARGS}
+    -DSFMLDIR:PATH=${EXTERNAL_DIR})
+
+  # Define SFML definitions to be used by projects that use SFML
+  if(SFML_SHARED_LIBRARIES)
+    set(EXTERNAL_ARGS ${EXTERNAL_ARGS}
+      -DSFML_DEFS:STRING=-DSFML_DYNAMIC)
+  else(SFML_SHARED_LIBRARIES)
+    set(EXTERNAL_ARGS ${EXTERNAL_ARGS}
+      -DSFML_DEFS:STRING=-DSFML_STATIC)
+  endif(SFML_SHARED_LIBRARIES)
+endif(SFML_ENABLED)
+

@@ -9,17 +9,17 @@ set_option(TICTACTOE_ENABLED TRUE BOOL "Build 'TICTACTOE' project?")
 set_option(TICTACTOE_BUILD_DOCS TRUE BOOL "Build 'TICTACTOE' documentation?")
 
 # Define the 3rdparty/external libraries this project depends on
-set(TICTACTOE_3RDPARTY_DEPENDS GQE SFML)
+set(TICTACTOE_3RDPARTY_DEPENDS SFML GQE)
 
 # Define the package components for each 3rdparty/external library
 if(WINDOWS)
   set(TICTACTOE_3RDPARTY_COMPONENTS
-    GQE core
-    SFML audio graphics window network system main)
+    SFML audio graphics window network system main
+    GQE core)
 else(WINDOWS)
   set(TICTACTOE_3RDPARTY_COMPONENTS
-    GQE core
-    SFML audio graphics window network system)
+    SFML audio graphics window network system
+    GQE core)
 endif(WINDOWS)
 
 # Define custom CMake configuration arguments for this project (if desired)

@@ -12,6 +12,9 @@ set_option(GLEW_REVISION_TAG "" STRING "Which 'GLEW' revision/tag to use?")
 set_option(GLEW_BUILD_DOCS TRUE BOOL "Build 'GLEW' documentation?")
 #set_option(GLEW_BUILD_EXAMPLES FALSE BOOL "Build 'GLEW' examples?")
 
-# Add our directory to the EXTERNAL_ARGS list for the projects to use later
-set(EXTERNAL_ARGS ${EXTERNAL_ARGS}
-  -DGLEWDIR:PATH=${EXTERNAL_DIR})
+# Add internal options if GLEW is enabled
+if(GLEW_ENABLED)
+  # Add our directory to the EXTERNAL_ARGS list for the projects to use later
+  set(EXTERNAL_ARGS ${EXTERNAL_ARGS}
+    -DGLEWDIR:PATH=${EXTERNAL_DIR})
+endif(GLEW_ENABLED)
