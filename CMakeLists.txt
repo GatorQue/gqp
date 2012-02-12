@@ -18,7 +18,7 @@ endif(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 project(TopLevel)
 
 # Define the path of our additional External CMake modules
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules/" "${CMAKE_SOURCE_DIR}/external/cmake/Modules")
+set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
 
 # Include the top level macros to be used by all projects
 include(${CMAKE_SOURCE_DIR}/cmake/Macros.cmake)

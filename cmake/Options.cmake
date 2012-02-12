@@ -2,6 +2,7 @@
 # Description: Define various CMake build options for all projects
 # Modification Log:
 # 2012-01-02 Initial version
+# 2012-02-11 Change CMAKE to MODULES and added License directory
 #
 
 # Option: TARGET_ARCH_TYPE
@@ -30,7 +31,9 @@ endif(NOT TOPLEVEL_DIR)
 # Description: The directory to store all 3rdparty/external libraries, binary
 # files, and documentation after they have been built.
 # Value: ${TOPLEVEL_DIR}/external
-set_option(EXTERNAL_DIR ${TOPLEVEL_DIR}/external PATH "External or 3rdparty libaries folder path")
+if(NOT EXTERNAL_DIR)
+  set_option(EXTERNAL_DIR ${CMAKE_BINARY_DIR}/external PATH "External or 3rdparty libaries folder path")
+endif(NOT EXTERNAL_DIR)
 
 # Option: TOUCH_DIR
 # Description: The directory in which touch files will be created
@@ -48,8 +51,9 @@ set(EXTERNAL_LIB_DIR ${EXTERNAL_DIR}/lib)
 set(EXTERNAL_INCLUDE_DIR ${EXTERNAL_DIR}/include)
 set(EXTERNAL_SRC_DIR ${EXTERNAL_DIR}/src)
 set(EXTERNAL_DOC_DIR ${EXTERNAL_DIR}/doc)
-set(EXTERNAL_CMAKE_DIR ${EXTERNAL_DIR}/cmake)
+set(EXTERNAL_MODULES_DIR ${EXTERNAL_DIR}/cmake/Modules)
 set(EXTERNAL_EXAMPLES_DIR ${EXTERNAL_DIR}/examples)
+set(EXTERNAL_LICENSE_DIR ${EXTERNAL_DIR})
 
 # Detect the host architecture
 include(CheckTypeSize)

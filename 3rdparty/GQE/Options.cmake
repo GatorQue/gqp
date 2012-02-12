@@ -22,7 +22,7 @@ if(GQE_ENABLED)
   set(EXTERNAL_ARGS ${EXTERNAL_ARGS}
     -DGQEDIR:PATH=${EXTERNAL_DIR})
 
-  # Define GQE definitions to be used by projects that use GQE
+  # Define compiler definitions to be used by projects that use GQE
   if(GQE_SHARED_LIBRARIES)
     set(EXTERNAL_ARGS ${EXTERNAL_ARGS}
       -DGQE_DEFS:STRING=-DGQE_DYNAMIC)

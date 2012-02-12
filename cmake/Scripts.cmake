@@ -3,6 +3,7 @@
 # clone, extract, and/or download files from the internet
 # Modification Log:
 # 2012-01-28 Initial version
+# 2012-02-11 Fix type in ScriptCloneSubversion function
 #
 
 # Name: ScriptDownloadFile
@@ -352,7 +353,7 @@ function(ScriptCloneSubversion script_filename repository directory)
 if(NOT EXISTS \"${directory}\")
   execute_process(
     COMMAND \"${CMAKE_COMMAND}\" -E make_directory \"${directory}\"
-    COMMAND \"${Subversion_SVN_EXECUTABLE}\" co ${respository} ${tag_arg} --non-interactive ${user_arg} ${password_arg} \"${directory}\"
+    COMMAND \"${Subversion_SVN_EXECUTABLE}\" co ${repository} ${tag_arg} --non-interactive ${user_arg} ${password_arg} \"${directory}\"
     WORKING_DIRECTORY \"${PROJECT_BINARY_DIR}\"
     RESULT_VARIABLE error_code)
   if(error_code)

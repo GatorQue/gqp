@@ -3,15 +3,15 @@
 #   build chain.
 # Modification Log:
 # 2012-02-04 Initial version
+# 2012-02-11 Remove extra copy step, less duplication of files
 #
 
 # Create a project name for the external 3rd party project files
 project(external)
 
-# Add 3rdparty/external custom target
-add_custom_target(external ALL
-  DEPENDS ${EXTERNAL_DIR}
-  DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-install)
+# Add 3rdparty/external custom target to add dependencies to (see the
+# projects/CMakeLists.txt file)
+add_custom_target(external ALL)
 
 # Use get_subdirs macro to find all subdirectories with a Options.cmake file
 get_subdirs(EXTERNAL_OPTIONS "Options.cmake")
@@ -41,25 +41,3 @@ foreach(EXTERNAL_CMAKE_DIR ${EXTERNAL_CMAKES})
   endif()
 endforeach()
 
-# Add a custom command to create the external folder
-add_custom_command(
-  OUTPUT ${EXTERNAL_DIR}
-  COMMENT "Creating 3rdparty/external folder '${EXTERNAL_DIR}'"
-  COMMAND ${CMAKE_COMMAND} -E make_directory ${EXTERNAL_DIR}
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  VERBATIM)
-
-# Add a custom command to copy all the 3rdparty/external libraries built into
-# the 3rdparty/external folder for projects to find and use
-add_custom_command(
-  OUTPUT ${TOUCH_DIR}/${PROJECT_NAME}-install
-  COMMENT "Installing 3rdparty files into '${EXTERNAL_DIR}' folder"
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/bin ${EXTERNAL_BIN_DIR}
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/lib ${EXTERNAL_LIB_DIR}
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/include ${EXTERNAL_INCLUDE_DIR}
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/src ${EXTERNAL_SRC_DIR}
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/doc ${EXTERNAL_DOC_DIR}
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/cmake ${EXTERNAL_CMAKE_DIR}
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/examples ${EXTERNAL_EXAMPLES_DIR}
-  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-  VERBATIM)

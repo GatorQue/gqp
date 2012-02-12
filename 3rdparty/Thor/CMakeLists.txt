@@ -1,40 +1,40 @@
 # Filename: CMakeLists.txt
-# Description: This will build four versions of the SFML project for each
-#   library type you may use (Release, Debug) and (Shared, Static).
+# Description: This will install the Thor source and include files into the
+#   external library for you to reference.
 # Modification Log:
-# 2012-01-03 Initial version
-# 2012-02-11 Add cmake module path to configure step. Also change install path
-#   to a directory to prevent any future copy issues.
+# 2012-02-11 Initial version
 #
 
-# Define the SFML project
+# Define the Thor project
 project(${EXTERNAL_CMAKE_DIR})
 
 # Define CMake arguments for configuring both versions
-set(CONFIG_SFML_DEBUG
-  -DBUILD_DOC:BOOL=FALSE
-  -DBUILD_EXAMPLES:BOOL=${SFML_BUILD_EXAMPLES}
-  -DBUILD_SHARED_LIBS:BOOL=${SFML_SHARED_LIBRARIES}
+set(CONFIG_THOR_DEBUG
+  -DTHOR_BUILD_EXAMPLES:BOOL=${THOR_BUILD_EXAMPLES}
+  -DBUILD_SHARED_LIBS:BOOL=${THOR_SHARED_LIBRARIES}
+  -DTHOR_SHARED_LIBS:BOOL=${SFML_SHARED_LIBRARIES}
+  -DSFMLDIR:PATH=${EXTERNAL_DIR}
   -DCMAKE_BUILD_TYPE:STRING=Debug
   -DCMAKE_MODULE_PATH:PATH=${EXTERNAL_MODULES_DIR}
   -DCMAKE_INSTALL_PREFIX=${PROJECT_BINARY_DIR}/install
   -G${CMAKE_GENERATOR}
   ${PROJECT_BINARY_DIR}/clone)
-set(CONFIG_SFML_RELEASE
-  -DBUILD_DOC:BOOL=${SFML_BUILD_DOCS}
-  -DBUILD_EXAMPLES:BOOL=${SFML_BUILD_EXAMPLES}
-  -DBUILD_SHARED_LIBS:BOOL=${SFML_SHARED_LIBRARIES}
+set(CONFIG_THOR_RELEASE
+  -DTHOR_BUILD_EXAMPLES:BOOL=${THOR_BUILD_EXAMPLES}
+  -DBUILD_SHARED_LIBS:BOOL=${THOR_SHARED_LIBRARIES}
+  -DTHOR_SHARED_LIBS:BOOL=${SFML_SHARED_LIBRARIES}
+  -DSFMLDIR:PATH=${EXTERNAL_DIR}
   -DCMAKE_BUILD_TYPE:STRING=Release
   -DCMAKE_MODULE_PATH:PATH=${EXTERNAL_MODULES_DIR}
   -DCMAKE_INSTALL_PREFIX=${PROJECT_BINARY_DIR}/install
   -G${CMAKE_GENERATOR}
   ${PROJECT_BINARY_DIR}/clone)
 
-# Define CMake arguments for building both versions
-set(BUILD_SFML_DEBUG
+# Define CMake arguments for copying building both versions
+set(BUILD_THOR_DEBUG
   --build ${PROJECT_BINARY_DIR}/debug
   --config ${CMAKE_CFG_INTDIR})
-set(BUILD_SFML_RELEASE
+set(BUILD_THOR_RELEASE
   --build ${PROJECT_BINARY_DIR}/release
   --config ${CMAKE_CFG_INTDIR})
 
@@ -53,11 +53,11 @@ set(COPY_INCLUDE
   ${EXTERNAL_INCLUDE_DIR})
 set(COPY_DOC
   -E copy_directory
-  ${PROJECT_BINARY_DIR}/install/doc/html
+  ${PROJECT_BINARY_DIR}/clone/doc/html
   ${EXTERNAL_DOC_DIR}/${PROJECT_NAME})
 set(COPY_CMAKE
-  -E copy_directory
-  ${PROJECT_BINARY_DIR}/install/cmake/Modules
+  -E copy
+  ${PROJECT_SOURCE_DIR}/FindThor.cmake
   ${EXTERNAL_MODULES_DIR})
 set(COPY_EXAMPLES
   -E copy_directory
@@ -68,8 +68,18 @@ set(COPY_LICENSE
   ${PROJECT_BINARY_DIR}/install/license.txt
   ${EXTERNAL_LICENSE_DIR}/${PROJECT_NAME}-license.txt)
 
+# First see if Doxygen is available
+find_package(Doxygen)
+
+# Create Script to clone Thor library
+ScriptCloneSubversion(${PROJECT_BINARY_DIR}/clone.cmake
+  ${THOR_URL}
+  ${PROJECT_BINARY_DIR}/clone
+  ${THOR_REVISION_TAG})
+
 # Add custom target for this 3rdparty/external library
 add_custom_target(${PROJECT_NAME}
+  DEPENDS SFML
   DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-complete)
 
 # Add the complete step first that depends on all the other steps
@@ -85,44 +95,14 @@ add_custom_command(
   DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-install
   VERBATIM)
 
-# Grab the correct 'sfml-get' custom command based on version desired
-if(SFML_USE_LATEST)
-  # Create Script to clone SFML library
-  ScriptCloneGit(${PROJECT_BINARY_DIR}/clone.cmake
-    ${SFML_URL}
-    ${PROJECT_BINARY_DIR}/clone
-    ${SFML_REVISION_TAG})
-
-  # Add a custom command to clone the GIT repository
-  add_custom_command(
-    OUTPUT ${PROJECT_BINARY_DIR}/clone
-    COMMAND ${CMAKE_COMMAND} -P ${PROJECT_BINARY_DIR}/clone.cmake
-    COMMAND ${CMAKE_COMMAND} -E remove_directory ${PROJECT_BINARY_DIR}/debug
-    COMMAND ${CMAKE_COMMAND} -E remove_directory ${PROJECT_BINARY_DIR}/release
-    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
-    VERBATIM)
-else(SFML_USE_LATEST)
-  # Create Script to download older SFML version source files
-  ScriptDownloadFile(${PROJECT_BINARY_DIR}/download.cmake
-    ${SFML_URL}
-    ${PROJECT_BINARY_DIR}/sfml.zip
-    30)
-
-  # Create Script to extract older SFML version source files
-  ScriptExtractFile(${PROJECT_BINARY_DIR}/extract.cmake
-    ${PROJECT_BINARY_DIR}/sfml.zip
-    ${PROJECT_BINARY_DIR}/clone)
-
-  # Add a custom command to download and extract older SFML version
-  add_custom_command(
-    OUTPUT ${PROJECT_BINARY_DIR}/clone
-    COMMAND ${CMAKE_COMMAND} -P ${PROJECT_BINARY_DIR}/download.cmake
-    COMMAND ${CMAKE_COMMAND} -P ${PROJECT_BINARY_DIR}/extract.cmake
-    COMMAND ${CMAKE_COMMAND} -E remove_directory ${PROJECT_BINARY_DIR}/debug
-    COMMAND ${CMAKE_COMMAND} -E remove_directory ${PROJECT_BINARY_DIR}/release
-    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
-    VERBATIM)
-endif(SFML_USE_LATEST)
+# Add a custom command to download the source from the repository
+add_custom_command(
+  OUTPUT ${PROJECT_BINARY_DIR}/clone
+  COMMAND ${CMAKE_COMMAND} -P ${PROJECT_BINARY_DIR}/clone.cmake
+  COMMAND ${CMAKE_COMMAND} -E remove_directory ${PROJECT_BINARY_DIR}/debug
+  COMMAND ${CMAKE_COMMAND} -E remove_directory ${PROJECT_BINARY_DIR}/release
+  WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+  VERBATIM)
 
 # Add a custom command to create the debug library build folder
 add_custom_command(
@@ -137,8 +117,8 @@ add_custom_command(
 add_custom_command(
   OUTPUT ${TOUCH_DIR}/${PROJECT_NAME}-debug
   COMMENT "Configuring '${PROJECT_NAME}' for debug libraries"
-  COMMAND ${CMAKE_COMMAND} ${CONFIG_SFML_DEBUG}
-  COMMAND ${CMAKE_COMMAND} ${BUILD_SFML_DEBUG} --target install
+  COMMAND ${CMAKE_COMMAND} ${CONFIG_THOR_DEBUG}
+  COMMAND ${CMAKE_COMMAND} ${BUILD_THOR_DEBUG} --target install
   COMMAND ${CMAKE_COMMAND} -E touch ${TOUCH_DIR}/${PROJECT_NAME}-debug
   WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/debug
   DEPENDS ${PROJECT_BINARY_DIR}/clone
@@ -155,33 +135,42 @@ add_custom_command(
   VERBATIM)
 
 # Build a release build of the library
-if(SFML_BUILD_DOCS)
+if(THOR_BUILD_DOCS AND DOXYGEN_FOUND)
+  # Add custom command to build the Thor documentation
+  add_custom_command(
+    OUTPUT ${TOUCH_DIR}/${PROJECT_NAME}-doc
+    COMMENT "Building '${PROJECT_NAME}' documentation"
+    COMMAND "${DOXYGEN_EXECUTABLE}" Doxyfile.txt
+    COMMAND ${CMAKE_COMMAND} -E touch ${TOUCH_DIR}/${PROJECT_NAME}-doc
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/clone/doc
+    DEPENDS ${PROJECT_BINARY_DIR}/clone
+    VERBATIM)
   add_custom_command(
     OUTPUT ${TOUCH_DIR}/${PROJECT_NAME}-release
     COMMENT "Configuring '${PROJECT_NAME}' for release libraries"
-    COMMAND ${CMAKE_COMMAND} ${CONFIG_SFML_RELEASE}
-    COMMAND ${CMAKE_COMMAND} ${BUILD_SFML_RELEASE} --target doc
-    COMMAND ${CMAKE_COMMAND} ${BUILD_SFML_RELEASE} --target install
+    COMMAND ${CMAKE_COMMAND} ${CONFIG_THOR_RELEASE}
+    COMMAND ${CMAKE_COMMAND} ${BUILD_THOR_RELEASE} --target install
+    COMMAND ${CMAKE_COMMAND} -E touch ${TOUCH_DIR}/${PROJECT_NAME}-release
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/release
+    DEPENDS ${PROJECT_BINARY_DIR}/clone
+    DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-doc
+    DEPENDS ${PROJECT_BINARY_DIR}/release
+    VERBATIM)
+else(THOR_BUILD_DOCS AND DOXYGEN_FOUND)
+  add_custom_command(
+    OUTPUT ${TOUCH_DIR}/${PROJECT_NAME}-release
+    COMMENT "Configuring '${PROJECT_NAME}' for release libraries"
+    COMMAND ${CMAKE_COMMAND} ${CONFIG_THOR_RELEASE}
+    COMMAND ${CMAKE_COMMAND} ${BUILD_THOR_RELEASE} --target install
     COMMAND ${CMAKE_COMMAND} -E touch ${TOUCH_DIR}/${PROJECT_NAME}-release
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/release
     DEPENDS ${PROJECT_BINARY_DIR}/clone
     DEPENDS ${PROJECT_BINARY_DIR}/release
     VERBATIM)
-else(SFML_BUILD_DOCS)
-  add_custom_command(
-    OUTPUT ${TOUCH_DIR}/${PROJECT_NAME}-release
-    COMMENT "Configuring '${PROJECT_NAME}' for release libraries"
-    COMMAND ${CMAKE_COMMAND} ${CONFIG_SFML_RELEASE}
-    COMMAND ${CMAKE_COMMAND} ${BUILD_SFML_RELEASE} --target install
-    COMMAND ${CMAKE_COMMAND} -E touch ${TOUCH_DIR}/${PROJECT_NAME}-release
-    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/release
-    DEPENDS ${PROJECT_BINARY_DIR}/clone
-    DEPENDS ${PROJECT_BINARY_DIR}/release
-    VERBATIM)
-endif(SFML_BUILD_DOCS)
+endif(THOR_BUILD_DOCS AND DOXYGEN_FOUND)
 
-# Install the compiled libraries, binary files, include files, and documents
-# to the correct folders for GQE to find them.
+# Install the include files, documentation, and source files to the external
+# folder for use my our projects.
 add_custom_command(
   OUTPUT ${TOUCH_DIR}/${PROJECT_NAME}-install
   COMMENT "Installing '${PROJECT_NAME}' libraries into '${EXTERNAL_DIR}'"

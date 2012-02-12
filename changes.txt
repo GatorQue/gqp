@@ -1,3 +1,9 @@
+Version 0.5.0
+=============
+- Several general fixes
+- License file fixes
+- Added Thor library (default SFML to get latest)
+
 Version 0.4.0
 ==============
 - Initial release to Google Code project site

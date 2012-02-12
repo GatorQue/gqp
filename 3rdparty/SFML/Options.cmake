@@ -8,7 +8,7 @@
 # SFML library options
 set_option(SFML_ENABLED TRUE BOOL "Build 'SFML' 3rdparty/external libraries?")
 set_option(SFML_SHARED_LIBRARIES TRUE BOOL "Build 'SFML' shared libraries?")
-set_option(SFML_USE_LATEST FALSE BOOL "Use 'SFML' version 2.x from GIT repository?")
+set_option(SFML_USE_LATEST TRUE BOOL "Use 'SFML' version 2.x from GIT repository?")
 set_option(SFML_REVISION_TAG "" STRING "Which 'SFML' revision/tag to use?")
 set_option(SFML_BUILD_DOCS TRUE BOOL "Build 'SFML' documentation?")
 set_option(SFML_BUILD_EXAMPLES FALSE BOOL "Build 'SFML' examples?")
@@ -32,7 +32,7 @@ if(SFML_ENABLED)
   set(EXTERNAL_ARGS ${EXTERNAL_ARGS}
     -DSFMLDIR:PATH=${EXTERNAL_DIR})
 
-  # Define SFML definitions to be used by projects that use SFML
+  # Define compiler definitions to be used by projects that use SFML
   if(SFML_SHARED_LIBRARIES)
     set(EXTERNAL_ARGS ${EXTERNAL_ARGS}
       -DSFML_DEFS:STRING=-DSFML_DYNAMIC)

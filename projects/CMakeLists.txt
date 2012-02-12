@@ -3,6 +3,7 @@
 #   directory.
 # Modification Log:
 # 2012-02-03 Initial version
+# 2012-02-11 Add CMAKE modules directory for configure
 #
 
 # Define our Projects project
@@ -23,7 +24,7 @@ add_custom_target(projects ALL DEPENDS ${PROJECT_BINARY_DIR}/projects-complete)
 # Add the complete step that depends on the enabled projects added above
 add_custom_command(
   OUTPUT ${PROJECT_BINARY_DIR}/projects-complete
-  COMMENT "Completed building all projects"
+  COMMENT "Completed configuring and building all projects"
   COMMAND ${CMAKE_COMMAND} -E touch ${PROJECT_BINARY_DIR}/projects-complete
   DEPENDS external
   DEPENDS ${SUBPROJECT_DEPENDS}
@@ -80,10 +81,11 @@ foreach(SUBPROJECT_CMAKE_DIR ${SUBPROJECT_CMAKES})
         ${EXTERNAL_ARGS}
         ${${SUBPROJECT_NAME}_CONFIG_ARGS}
         -DSUBPROJECT_NAME:STRING=${SUBPROJECT_NAME}
-        -DTOPLEVEL_DIR:PATH=${CMAKE_SOURCE_DIR}
+        -DTOPLEVEL_DIR:PATH=${TOPLEVEL_DIR}
         -DTOUCH_DIR:PATH=${TOUCH_DIR}
         -DEXTERNAL_DIR:PATH=${EXTERNAL_DIR}
         -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+        -DCMAKE_MODULE_PATH:PATH=${EXTERNAL_MODULES_DIR}
         -G ${CMAKE_GENERATOR} ${PROJECT_SOURCE_DIR}/${SUBPROJECT_CMAKE_DIR}
       COMMAND ${CMAKE_COMMAND}
         --build ${PROJECT_BINARY_DIR}/${SUBPROJECT_CMAKE_DIR}
