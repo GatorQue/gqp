@@ -1,3 +1,7 @@
+Version 0.6.0
+=============
+- Now builds external libraries and projects all within one solution file.
+
 Version 0.5.0
 =============
 - Several general fixes
