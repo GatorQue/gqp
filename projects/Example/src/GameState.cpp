@@ -1,7 +1,7 @@
 /**
  * Provides the TicTacToe GameState example in the GQE library.
  *
- * @file examples/demo/GameState.cpp
+ * @file src/GameState.cpp
  * @author Ryan Lindeman
  * @date 20110704 - Initial Release
  * @date 20110721 - Remove * from GetAsset() calls since it now returns TYPE&

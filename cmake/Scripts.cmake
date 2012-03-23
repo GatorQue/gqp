@@ -4,7 +4,29 @@
 # Modification Log:
 # 2012-01-28 Initial version
 # 2012-02-11 Fix type in ScriptCloneSubversion function
+# 2012-03-23 Fixes to a few update/clone functions and added CopyBinaries script
 #
+
+# Name: ScriptCopyBinaries
+# Description: Write a copy script to copy all binary files specified to the
+# directory specified.
+# Usage: ScriptCopyBinaries(script_filename directory files)
+# Example:
+# ScriptCopyBinaries(${PROJECT_BINARY_DIR}/copy.cmake ${PROJECT_BINARY_DIR}/${CMAKE_CFG_INTDIR} ${RELASE_BINARIES} ${DEBUG_BINARIES})
+function(ScriptCopyBinaries script_filename destination)
+  # Erase the script_filename if it already exists
+  file(REMOVE ${script_filename})
+
+  # Loop through optional arguments
+  foreach(src_file ${ARGN})
+    file(APPEND ${script_filename} "
+if(EXISTS \"${src_file}\")
+  message(STATUS \"Copying '${src_file}' to '${destination}'\")
+  file(COPY \"${src_file}\" DESTINATION \"${destination}\")
+endif(EXISTS \"${src_file}\")
+")
+  endforeach(src_file ${ARGN})
+endfunction(ScriptCopyBinaries)
 
 # Name: ScriptDownloadFile
 # Description: Write a download script to download the file specified within
@@ -287,7 +309,7 @@ execute_process(
   WORKING_DIRECTORY \"${directory}\"
   RESULT_VARIABLE error_code)
 if(error_code)
-  message(FATAL_ERROR \"Failed to clear current clone (have you changed its files?) in: '${directory}'\")
+  message(WARNING \"Error updating (have you changed its files?): '${directory}'\")
 endif(error_code)
 
 execute_process(
@@ -295,7 +317,7 @@ execute_process(
   WORKING_DIRECTORY \"${directory}\"
   RESULT_VARIABLE error_code)
 if(error_code)
-  message(FATAL_ERROR \"Failed to update to tag '${tag}' in: '${directory}'\")
+  message(FATAL_ERROR \"Error updating '${directory}' to tag '${tag}'\")
 endif(error_code)
 ")
 endfunction(ScriptCloneMercurial)

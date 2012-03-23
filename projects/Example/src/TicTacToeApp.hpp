@@ -2,7 +2,7 @@
  * Provides the TicTacToeApp class which implements the TicTacToe example game
  * for the GQE library.
  *
- * @file examples/demo/TicTacToeApp.hpp
+ * @file src/TicTacToeApp.hpp
  * @author Ryan Lindeman
  * @date 20110704 - Initial Release
  */

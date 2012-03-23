@@ -3,6 +3,7 @@
 # Modification Log:
 # 2012-01-02 Initial version
 # 2012-02-11 Change CMAKE to MODULES and added License directory
+# 2012-03-23 Various fixes to GQP options
 #
 
 # Option: TARGET_ARCH_TYPE
@@ -22,38 +23,52 @@ endif()
 # Option: TOPLEVEL_DIR
 # Description: The top level GatorQue Projects directory which is used as the
 # reference directory for all other directory references.
-# Value: ${CMAKE_SOURCE_DIR} if not yet defined
-if(NOT TOPLEVEL_DIR)
-  set_option(TOPLEVEL_DIR ${CMAKE_SOURCE_DIR} PATH "Top level directory")
-endif(NOT TOPLEVEL_DIR)
+# Value: ${PROJECT_SOURCE_DIR} if not yet defined
+if(NOT DEFINED TOPLEVEL_DIR)
+  set_option(TOPLEVEL_DIR ${PROJECT_SOURCE_DIR} PATH "Top level directory")
+endif(NOT DEFINED TOPLEVEL_DIR)
 
 # Option: EXTERNAL_DIR
 # Description: The directory to store all 3rdparty/external libraries, binary
 # files, and documentation after they have been built.
-# Value: ${TOPLEVEL_DIR}/external
-if(NOT EXTERNAL_DIR)
-  set_option(EXTERNAL_DIR ${CMAKE_BINARY_DIR}/external PATH "External or 3rdparty libaries folder path")
-endif(NOT EXTERNAL_DIR)
+# Value: ${TOPLEVEL_DIR}/3rdparty
+if(NOT DEFINED EXTERNAL_DIR)
+  set_option(EXTERNAL_DIR ${TOPLEVEL_DIR}/3rdparty PATH "3rdparty libaries folder path")
+endif(NOT DEFINED EXTERNAL_DIR)
 
 # Option: TOUCH_DIR
 # Description: The directory in which touch files will be created
-# Value: ${CMAKE_BINARY_DIR}/touch
-if(NOT TOUCH_DIR)
-  set_option(TOUCH_DIR ${CMAKE_BINARY_DIR}/touch PATH "Build directory path for touch files")
-endif(NOT TOUCH_DIR)
+# Value: ${PROJECT_BINARY_DIR}/touch
+if(NOT DEFINED TOUCH_DIR)
+  set_option(TOUCH_DIR ${PROJECT_BINARY_DIR}/touch PATH "Build directory path for touch files")
+endif(NOT DEFINED TOUCH_DIR)
 
 # Create the TOUCH directory
 file(MAKE_DIRECTORY ${TOUCH_DIR})
 
 # Define other directory values based on EXTERNAL_DIR
 set(EXTERNAL_BIN_DIR ${EXTERNAL_DIR}/bin)
-set(EXTERNAL_LIB_DIR ${EXTERNAL_DIR}/lib)
-set(EXTERNAL_INCLUDE_DIR ${EXTERNAL_DIR}/include)
-set(EXTERNAL_SRC_DIR ${EXTERNAL_DIR}/src)
 set(EXTERNAL_DOC_DIR ${EXTERNAL_DIR}/doc)
-set(EXTERNAL_MODULES_DIR ${EXTERNAL_DIR}/cmake/Modules)
 set(EXTERNAL_EXAMPLES_DIR ${EXTERNAL_DIR}/examples)
+set(EXTERNAL_INCLUDE_DIR ${EXTERNAL_DIR}/include)
+set(EXTERNAL_LIB_DIR ${EXTERNAL_DIR}/lib)
 set(EXTERNAL_LICENSE_DIR ${EXTERNAL_DIR})
+set(EXTERNAL_MODULES_DIR ${EXTERNAL_DIR}/cmake/Modules)
+set(EXTERNAL_SRC_DIR ${EXTERNAL_DIR}/src)
+
+# Option: USE_PRECOMPILED_EXTERNAL
+# Description: If a precompiled version is available for an external library
+# then use it instead of downloading and compiling a local copy of the
+# external library.
+# Value: TRUE
+set_option(USE_PRECOMPILED_EXTERNAL TRUE BOOL "Use precompiled external library if found?")
+
+# Add our Modules subfolder to the CMAKE_MODULE_PATH
+if(USE_PRECOMPILED_EXTERNAL)
+  set(CMAKE_MODULE_PATH ${EXTERNAL_MODULES_DIR} ${CMAKE_BINARY_DIR}/Modules ${CMAKE_MODULE_PATH})
+else(USE_PRECOMPILED_EXTERNAL)
+  set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR}/Modules ${CMAKE_MODULE_PATH})
+endif(USE_PRECOMPILED_EXTERNAL)
 
 # Detect the host architecture
 include(CheckTypeSize)
@@ -85,11 +100,11 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 elseif(MSVC_VERSION EQUAL 1400)
   set(COMPILER_MSVC 2005)
   # Add some include files missing in MSVC 2005
-  set(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} ${TOPLEVEL_DIR}/include/msvc)
+  include_directories(${TOPLEVEL_DIR}/include/msvc)
 elseif(MSVC_VERSION EQUAL 1500)
   set(COMPILER_MSVC 2008)
   # Add some include files missing in MSVC 2008
-  set(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} ${TOPLEVEL_DIR}/include/msvc)
+  include_directories(${TOPLEVEL_DIR}/include/msvc)
 elseif(MSVC_VERSION EQUAL 1600)
   set(COMPILER_MSVC 2010)
 else()
@@ -97,10 +112,20 @@ else()
   return()
 endif()
 
-# Add our external folder include file to the include path
-if(WINDOWS)
-  set(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} ${EXTERNAL_INCLUDE_DIR})
+# Detect the build tool information
+if(CMAKE_BUILD_TOOL MATCHES "nmake" OR
+   CMAKE_BUILD_TOOL MATCHES "make" OR
+   CMAKE_BUILD_TOOL MATCHES "gmake")
+  # Build debug and release libraries separately?
+  set(BUILD_SEPARATE TRUE)
+else()
+  # Build tools don't allow separate build of debug and release
+  set(BUILD_SINGLE TRUE)
+endif()
 
+# Add our external folder include file to the include path
+include_directories(${EXTERNAL_INCLUDE_DIR})
+if(WINDOWS)
   # Where will compiler find BIN and LIB files?
   set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} ${EXTERNAL_BIN_DIR})
   set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} ${EXTERNAL_LIB_DIR})
@@ -128,8 +153,6 @@ if(WINDOWS)
     endif()
   endif()
 elseif(LINUX)
-  set(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} ${EXTERNAL_INCLUDE_DIR})
-
   # Where will compiler find BIN and LIB files?
   set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} ${EXTERNAL_BIN_DIR})
   set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} ${EXTERNAL_LIB_DIR})
@@ -137,8 +160,6 @@ elseif(LINUX)
   # require proper c++
   ADD_DEFINITIONS("-Wall -pedantic")
 elseif(MACOSX)
-  set(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} ${EXTERNAL_INCLUDE_DIR})
-
   # Where will compiler find BIN and LIB files?
   set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} ${EXTERNAL_BIN_DIR})
   set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} ${EXTERNAL_LIB_DIR})
@@ -149,7 +170,7 @@ endif()
 
 # Add additional doxygen paths for MacOSX
 if(MACOSX)
-  set(ADDITIONAL_PATHS 
+  set(ADDITIONAL_PATHS
       /Developer/Applications/Doxygen.app/Contents/Resources
       /Developer/Applications/Doxygen.app/Contents/MacOS
       $ENV{HOME}/Applications/Doxygen.app/Contents/Resources

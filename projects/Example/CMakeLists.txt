@@ -8,7 +8,6 @@
 # Modification Log:
 # 2012-02-06 Initial version
 # 2012-02-11 Fix typo and added source files checking
-# 2012-03-23 Simplify the CMakeLists.txt file for skeleton projects
 #
 
 # Set our project name, which is the name of the current directory

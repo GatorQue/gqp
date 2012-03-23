@@ -42,8 +42,8 @@ if(DOXYGEN_FOUND)
   endif()
 
   # configure the source Doxyfile by copying it and replacing all @variables@
-  configure_file("${PROJECT_SOURCE_DIR}/doc/Doxyfile.in"
-    "${PROJECT_DOC_DIR}/Doxyfile"
+  configure_file(${PROJECT_SOURCE_DIR}/doc/Doxyfile.in
+    ${PROJECT_DOC_DIR}/Doxyfile
     @ONLY)
 
   # copy the files needed by the documentation
@@ -52,10 +52,14 @@ if(DOXYGEN_FOUND)
   #configure_file(${PROJECT_SOURCE_DIR}/doc/logo-bg.jpg ${PROJECT_DOC_DIR}/html/logo-bg.jpg COPYONLY)
 
   # Create documentation build target
-  add_custom_target(${PROJECT_NAME}-doc ALL
-    COMMAND ${CMAKE_COMMAND} -E echo_append "Building '${PROJECT_NAME}' Documentation..."
-    COMMAND "${DOXYGEN_EXECUTABLE}" "${PROJECT_DOC_DIR}/Doxyfile"}
-    COMMAND ${CMAKE_COMMAND} -E echo "Done."
+  add_custom_target(doc-${PROJECT_NAME} ALL
+    DEPENDS ${TOUCH_DIR}/${PROJECT_NAME}-doc)
+
+  # Create command to build documentation
+  add_custom_command(OUTPUT ${TOUCH_DIR}/${PROJECT_NAME}-doc
+    COMMENT "Creating documentation for '${PROJECT_NAME}'"
+    COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_DOC_DIR}/Doxyfile
+    COMMAND ${CMAKE_COMMAND} -E touch ${TOUCH_DIR}/${PROJECT_NAME}-doc
     WORKING_DIRECTORY ${PROJECT_DOC_DIR}
     VERBATIM)
 endif(DOXYGEN_FOUND)

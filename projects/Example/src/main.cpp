@@ -3,7 +3,7 @@
  * pretty small, but important.  In here we create our application and begin
  * the primary game loop.
  *
- * @file main.cpp
+ * @file src/main.cpp
  * @author Ryan Lindeman
  * @date 20100707 - Initial Release
  */
@@ -13,6 +13,12 @@
 #include <GQE/Core.hpp>
 #include "TicTacToeApp.hpp"
 
+/**
+ * The starting point of the Example application
+ * @param[in] argc the number of command line arguments provided
+ * @param[in] argv[] the array of command line arguments provided as an array
+ * @return the result returned by the Example application
+ */
 int main(int argc, char* argv[])
 {
   // Default anExitCode to a specific value
