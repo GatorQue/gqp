@@ -121,7 +121,7 @@ void GameState::HandleEvents(sf::Event theEvent)
   // Exit program if Escape key is pressed
 #if (SFML_VERSION_MAJOR < 2)
   if((theEvent.Type == sf::Event::KeyReleased) && (theEvent.Key.Code == sf::Key::Escape))
-8#else
+#else
   if((theEvent.type == sf::Event::KeyReleased) && (theEvent.key.code == sf::Keyboard::Escape))
 #endif
   {
