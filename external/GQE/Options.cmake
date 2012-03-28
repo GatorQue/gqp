@@ -9,7 +9,7 @@
 set_option(GQE_ENABLED TRUE BOOL "Build 'GQE' 3rdparty/external libraries?")
 set_option(GQE_SHARED_LIBRARIES TRUE BOOL "Build 'GQE' shared libraries?")
 set_option(GQE_REVISION_TAG "" STRING "Which 'GQE' revision/tag to use?")
-set_option(GQE_BUILD_DOCS TRUE BOOL "Build 'GQE' documentation?")
+set_option(GQE_BUILD_DOCS FALSE BOOL "Build 'GQE' documentation?")
 set_option(GQE_BUILD_EXAMPLES FALSE BOOL "Build 'GQE' examples?")
 set_option(GQE_URL
   "https://RyanLindeman@code.google.com/p/gqe"
@@ -74,5 +74,11 @@ if(GQE_ENABLED)
 
   # Define where this module can find the precompiled libraries
   set(GQEDIR ${EXTERNAL_DIR})
+
+  # Specify the binary directory to copy as a post_build step
+  set(GQE_BIN_DIR
+    ${EXTERNAL_BIN_DIR})
+  # Push the list to the parent scope for projects to reference
+  set(GQE_BIN_DIR ${GQE_BIN_DIR} PARENT_SCOPE)
 endif(GQE_ENABLED)
 

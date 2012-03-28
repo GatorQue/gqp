@@ -72,5 +72,11 @@ if(THOR_ENABLED)
 
   # Define where this module can find the precompiled libraries
   set(THORDIR ${EXTERNAL_DIR})
+
+  # Specify the binary directory to copy as a post_build step
+  set(THOR_BIN_DIR
+    ${EXTERNAL_BIN_DIR})
+  # Push the list to the parent scope for projects to reference
+  set(THOR_BIN_DIR ${THOR_BIN_DIR} PARENT_SCOPE)
 endif(THOR_ENABLED)
 

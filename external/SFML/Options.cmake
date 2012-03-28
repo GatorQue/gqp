@@ -8,7 +8,7 @@
 # SFML library options
 set_option(SFML_ENABLED TRUE BOOL "Build 'SFML' 3rdparty/external libraries?")
 set_option(SFML_SHARED_LIBRARIES TRUE BOOL "Build 'SFML' shared libraries?")
-set_option(SFML_USE_LATEST TRUE BOOL "Use 'SFML' version 2.x from GIT repository?")
+set_option(SFML_USE_LATEST FALSE BOOL "Use 'SFML' version 2.x from GIT repository?")
 set_option(SFML_REVISION_TAG "" STRING "Which 'SFML' revision/tag to use?")
 set_option(SFML_BUILD_DOCS FALSE BOOL "Build 'SFML' documentation?")
 set_option(SFML_BUILD_EXAMPLES FALSE BOOL "Build 'SFML' examples?")
@@ -19,11 +19,19 @@ if(SFML_USE_LATEST)
     "https://github.com/LaurentGomila/SFML.git"
     STRING
     "Git URL for getting latest 'SFML' version")
+
+  # Create a list of examples
+  set(SFML_EXAMPLES
+    ftp opengl pong shader sockets sound sound-capture voip win32 window)
 else(SFML_USE_LATEST)
   set_option(SFML_URL
-    "http://gqe.googlecode.com/files/SFML-1.6.2-cmake.zip"
+    "http://gqe.googlecode.com/files/SFML-1.6.3-cmake.zip"
     STRING
     "URL for getting older 'SFML' version")
+
+  # Create a list of examples
+  set(SFML_EXAMPLES
+    ftp opengl pong shader sockets sound sound-capture voip win32 window)
 endif(SFML_USE_LATEST)
 
 # Create a list of libraries provided by this 3rd party/external module
@@ -45,10 +53,6 @@ else(SFML_SHARED_LIBRARIES)
 endif(SFML_SHARED_LIBRARIES)
 # Push the list to the parent scope for projects to reference
 set(SFML_DEFS ${SFML_DEFS} PARENT_SCOPE)
-
-# Create a list of examples
-set(SFML_EXAMPLES
-  ftp opengl pong shader sockets sound sound-capture voip win32 window)
 
 # Create a list of external dependencies used by this external library
 set(SFML_DEPS)
@@ -90,5 +94,12 @@ if(SFML_ENABLED)
 
   # Define where this module can find the precompiled libraries
   set(SFMLDIR ${EXTERNAL_DIR})
+
+  # Specify the binary directory to copy as a post_build step
+  set(SFML_BIN_DIR
+    ${EXTERNAL_BIN_DIR}
+    ${TOPLEVEL_DIR}/${EXTERNAL_OPTION_DIR}/extlibs/bin/${TARGET_ARCH_TYPE})
+  # Push the list to the parent scope for projects to reference
+  set(SFML_BIN_DIR ${SFML_BIN_DIR} PARENT_SCOPE)
 endif(SFML_ENABLED)
 
