@@ -1,3 +1,7 @@
+Version 0.7.0
+=============
+- Fix issues with post_build copy of binary files and SFML2 changes to Example
+
 Version 0.6.0
 =============
 - Now builds external libraries and projects all within one solution file.
