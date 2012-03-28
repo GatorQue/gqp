@@ -20,12 +20,13 @@ function(ScriptCopyBinaries script_filename destination)
   # Loop through optional arguments
   foreach(src_file ${ARGN})
     file(APPEND ${script_filename} "
-if(EXISTS \"${src_file}\")
-  message(STATUS \"Copying '${src_file}' to '${destination}'\")
-  file(COPY \"${src_file}\" DESTINATION \"${destination}\")
-endif(EXISTS \"${src_file}\")
+string(REPLACE \"\$(Configuration)\" \"\${CONFIG}\" filename \"${src_file}\")
+if(EXISTS \${filename})
+  file(COPY \${filename} DESTINATION ${destination})
+endif(EXISTS \${filename})
 ")
   endforeach(src_file ${ARGN})
+
 endfunction(ScriptCopyBinaries)
 
 # Name: ScriptDownloadFile
