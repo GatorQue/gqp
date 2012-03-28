@@ -83,8 +83,13 @@ file(GLOB_RECURSE ${SUBPROJECT_NAME}_SOURCES
 
 # Add executable if source files were found
 if(${SUBPROJECT_NAME}_SOURCES)
-  # Add a target to build the source files
-  add_executable(${PROJECT_NAME} ${${SUBPROJECT_NAME}_SOURCES})
+
+  # Add a executable target to build the source files
+  if(WINDOWS)
+    add_executable(${PROJECT_NAME} WIN32 ${${SUBPROJECT_NAME}_SOURCES})
+  else(WINDOWS)
+    add_executable(${PROJECT_NAME} ${${SUBPROJECT_NAME}_SOURCES})
+  endif(WINDOWS)
 
   # Set the debug suffix
   set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX -d)
@@ -107,6 +112,17 @@ if(${SUBPROJECT_NAME}_SOURCES)
     set(DEBUG_BINARIES)
     # Loop through each dependency looking for DLL files to copy
     foreach(EXTERNAL_NAME ${${SUBPROJECT_NAME}_DEPS})
+
+      # Loop through each binary directory and add a copy directory command
+      foreach(BINARY_DIR ${${EXTERNAL_NAME}_BIN_DIR})
+        # Add each binary directory to copy as a custom command
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+          COMMAND ${CMAKE_COMMAND} -E copy_directory
+          ${BINARY_DIR}
+          ${PROJECT_BINARY_DIR}/${CMAKE_CFG_INTDIR}
+          VERBATIM)
+      endforeach(BINARY_DIR ${${EXTERNAL_NAME}_BIN_DIR})
+
       # Loop through each library provided by this module
       foreach(LIBRARY_NAME ${${EXTERNAL_NAME}_LIBS})
         # Get the release and debug names of each library
@@ -128,6 +144,17 @@ if(${SUBPROJECT_NAME}_SOURCES)
 
       # Get the subexternal dependencies too
       foreach(SUBEXTERNAL_NAME ${${EXTERNAL_NAME}_DEPS})
+
+        # Loop through each binary directory and add a copy directory command
+        foreach(BINARY_DIR ${${SUBEXTERNAL_NAME}_BIN_DIR})
+          # Add each binary directory to copy as a custom command
+          add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${BINARY_DIR}
+            ${PROJECT_BINARY_DIR}/${CMAKE_CFG_INTDIR}
+            VERBATIM)
+        endforeach(BINARY_DIR ${${SUBEXTERNAL_NAME}_BIN_DIR})
+
         # Loop through each library provided by this module
         foreach(LIBRARY_NAME ${${SUBEXTERNAL_NAME}_LIBS})
           # Get the release and debug names of each library
@@ -156,7 +183,7 @@ if(${SUBPROJECT_NAME}_SOURCES)
 
     # Create a custom command to call the copy.cmake script created above
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -P ${PROJECT_BINARY_DIR}/copy.cmake
+      COMMAND ${CMAKE_COMMAND} -DCONFIG:STRING=$<CONFIGURATION> -P ${PROJECT_BINARY_DIR}/copy.cmake
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${CMAKE_CFG_INTDIR}
       VERBATIM)
   endif(WINDOWS)
