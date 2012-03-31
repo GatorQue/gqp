@@ -21,5 +21,5 @@ TicTacToeApp::~TicTacToeApp()
 void TicTacToeApp::Init(void)
 {
   // Add Menu State as the next active state
-  mStateManager.AddActiveState(new(std::nothrow) GameState(this));
+  mStateManager.AddActiveState(new(std::nothrow) GameState(*this));
 }

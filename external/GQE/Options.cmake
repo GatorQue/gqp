@@ -22,7 +22,7 @@ set(GQE_LIBS gqe-core)
 set(GQE_LIBS ${GQE_LIBS} PARENT_SCOPE)
 
 # Create a list of components provided by this external module
-set(GQE_COMPONENTS CORE)
+set(GQE_COMPONENTS CORE ENTITIES)
 # Push this list to the parent scope for projects to reference
 set(GQE_COMPONENTS ${GQE_COMPONENTS} PARENT_SCOPE)
 
@@ -36,7 +36,7 @@ endif(GQE_SHARED_LIBRARIES)
 set(GQE_DEFS ${GQE_DEFS} PARENT_SCOPE)
 
 # Create a list of example targets provided by this library
-set(GQE_EXAMPLES tictactoe)
+set(GQE_EXAMPLES spacedots tictactoe)
 
 # Create a list of external dependencies used by this external library
 set(GQE_DEPS SFML)
@@ -58,10 +58,12 @@ set(GQE_LIB_DEPS ${GQE_LIB_DEPS} PARENT_SCOPE)
 if(GQE_ENABLED)
   # Define the libraries produced by this external module
   set(FIND_CORE_LIBRARY gqe-core)
+  set(FIND_ENTITIES_LIBRARY gqe-entities)
 
   # Define the global list of libraries produced by this external module
   set(FIND_LIBRARIES
-    ${FIND_CORE_LIBRARY})
+    ${FIND_CORE_LIBRARY}
+    ${FIND_ENTITIES_LIBRARY})
 
   # Define the include directory to reference for this external module
   set(FIND_INCLUDE_DIR

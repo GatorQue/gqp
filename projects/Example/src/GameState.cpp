@@ -12,7 +12,7 @@
 #include <GQE/Core/classes/App.hpp>
 #include <SFML/Graphics/Color.hpp>
 
-GameState::GameState(GQE::App* theApp) :
+GameState::GameState(GQE::App& theApp) :
   GQE::IState("Game",theApp),
   mBackground(NULL),
   mPlayer1(NULL),
@@ -31,11 +31,8 @@ void GameState::DoInit(void)
   // First call our base class implementation
   IState::DoInit();
   
-  // Check our App pointer
-  assert(NULL != mApp && "GameState::DoInit() bad app pointer");
-
   // Load our Background image which will show the TicTacToe game board
-  mBackground = mApp->mAssetManager.AddImage("Board", "resources/Board.png",
+  mBackground = mApp.mAssetManager.AddImage("Board", "resources/Board.png",
     GQE::AssetLoadStyleImmediate);
   if(NULL != mBackground)
   {
@@ -47,13 +44,13 @@ void GameState::DoInit(void)
   }
 
   // Load our Player 1 and Player 2 images which will show an X and O pieces
-  mPlayer1 = mApp->mAssetManager.AddImage("Player1", "resources/Player1.png",
+  mPlayer1 = mApp.mAssetManager.AddImage("Player1", "resources/Player1.png",
     GQE::AssetLoadStyleImmediate);
-  mPlayer2 = mApp->mAssetManager.AddImage("Player2", "resources/Player2.png",
+  mPlayer2 = mApp.mAssetManager.AddImage("Player2", "resources/Player2.png",
     GQE::AssetLoadStyleImmediate);
 
   // Load our Empty square image which will be used when there is nothing to show
-  mEmpty = mApp->mAssetManager.AddImage("Empty", "resources/Empty.png",
+  mEmpty = mApp.mAssetManager.AddImage("Empty", "resources/Empty.png",
     GQE::AssetLoadStyleImmediate);
 
 #if (SFML_VERSION_MAJOR < 2)
@@ -68,7 +65,7 @@ void GameState::DoInit(void)
   ReInit();
 
   // Make sure our update loop is only called 30 times per second
-  mApp->SetUpdateRate(30.0f);
+  mApp.SetUpdateRate(30.0f);
 }
 
 void GameState::ReInit(void)
@@ -126,7 +123,7 @@ void GameState::HandleEvents(sf::Event theEvent)
 #endif
   {
     // Signal the application to exit
-    mApp->Quit(GQE::StatusAppOK);
+    mApp.Quit(GQE::StatusAppOK);
   }
 
 #if (SFML_VERSION_MAJOR < 2)
@@ -205,9 +202,6 @@ void GameState::HandleEvents(sf::Event theEvent)
 
 void GameState::UpdateFixed(void)
 {
-  // Check our App pointer
-  assert(NULL != mApp && "GameState::UpdateFixed() bad app pointer, init must be called first");
-
   // Start with a tie game
   GQE::Uint8 anWinner = 3;
 
@@ -312,12 +306,9 @@ void GameState::UpdateFixed(void)
 
 void GameState::UpdateVariable(float theElapsedTime)
 {
-  // Check our App pointer
-  assert(NULL != mApp && "GameState::UpdateVariable() bad app pointer, init must be called first");
-
   // Draw the current player image at the mouse position
 #if (SFML_VERSION_MAJOR < 2)
-  mCursor.SetPosition(mApp->mInput.GetMouseX()-32.0f, mApp->mInput.GetMouseY()-25.25f);
+  mCursor.SetPosition(mApp.mInput.GetMouseX()-32.0f, mApp.mInput.GetMouseY()-25.25f);
 #else
   mCursor.setPosition(sf::Mouse::getPosition().x-32.0f, sf::Mouse::getPosition().y-25.25f);
 #endif
@@ -325,15 +316,12 @@ void GameState::UpdateVariable(float theElapsedTime)
 
 void GameState::Draw(void)
 {
-  // Check our App pointer
-  assert(NULL != mApp && "GameState::Draw() bad app pointer, init must be called first");
-
 #if (SFML_VERSION_MAJOR < 2)
   // Draw our Board sprite
-  mApp->mWindow.Draw(mBackgroundSprite);
+  mApp.mWindow.Draw(mBackgroundSprite);
 #else
   // Draw our Board sprite
-  mApp->mWindow.draw(mBackgroundSprite);
+  mApp.mWindow.draw(mBackgroundSprite);
 #endif
 
   for(GQE::Uint8 row = 0; row < 3; row++)
@@ -342,36 +330,36 @@ void GameState::Draw(void)
     {
 #if (SFML_VERSION_MAJOR < 2)
       // Draw our Board
-      mApp->mWindow.Draw(mBoardSprite[row][col]);
+      mApp.mWindow.Draw(mBoardSprite[row][col]);
 #else
       // Draw our Board
-      mApp->mWindow.draw(mBoardSprite[row][col]);
+      mApp.mWindow.draw(mBoardSprite[row][col]);
 #endif
     }
   }
 
 #if (SFML_VERSION_MAJOR < 2)
   // Draw winner text
-  mApp->mWindow.Draw(mWinnerText);
+  mApp.mWindow.Draw(mWinnerText);
 
   // Draw our cursor
-  mApp->mWindow.Draw(mCursor);
+  mApp.mWindow.Draw(mCursor);
 #else
   // Draw winner text
-  mApp->mWindow.draw(mWinnerText);
+  mApp.mWindow.draw(mWinnerText);
 
   // Draw our cursor
-  mApp->mWindow.draw(mCursor);
+  mApp.mWindow.draw(mCursor);
 #endif
 }
 
 void GameState::Cleanup(void)
 {
   // Unload our images since we don't need them anymore
-  mApp->mAssetManager.UnloadImage("Board");
-  mApp->mAssetManager.UnloadImage("Player1");
-  mApp->mAssetManager.UnloadImage("Player2");
-  mApp->mAssetManager.UnloadImage("Empty");
+  mApp.mAssetManager.UnloadImage("Board");
+  mApp.mAssetManager.UnloadImage("Player1");
+  mApp.mAssetManager.UnloadImage("Player2");
+  mApp.mAssetManager.UnloadImage("Empty");
 
   // Last of all, call our base class implementation
   IState::Cleanup();

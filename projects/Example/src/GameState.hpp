@@ -11,6 +11,8 @@
 
 #include <GQE/Core/Core_types.hpp>
 #include <GQE/Core/interfaces/IState.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/String.hpp>
 
 /// Provides the TicTacToe GameState example
 class GameState : public GQE::IState
@@ -18,9 +20,9 @@ class GameState : public GQE::IState
 public:
   /**
    * GameState constructor
-   * @param[in] theApp is a pointer to the App class.
+   * @param[in] theApp is an address to the App class.
    */
-  GameState(GQE::App* theApp);
+  GameState(GQE::App& theApp);
 
   /**
    * GameState deconstructor
