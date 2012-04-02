@@ -1,3 +1,8 @@
+Version 0.8.1
+=============
+- Change SFML to default to 2.0 version
+- Fix SFML v1.6 respository to use version 1.6.4 version which fixes an issue in the src/SFML/Network/CMakeLists.txt file
+
 Version 0.8.0
 =============
 - Added Box2D external library support

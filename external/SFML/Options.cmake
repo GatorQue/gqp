@@ -8,7 +8,7 @@
 # SFML library options
 set_option(SFML_ENABLED TRUE BOOL "Build 'SFML' 3rdparty/external libraries?")
 set_option(SFML_SHARED_LIBRARIES TRUE BOOL "Build 'SFML' shared libraries?")
-set_option(SFML_USE_LATEST FALSE BOOL "Use 'SFML' version 2.x from GIT repository?")
+set_option(SFML_USE_LATEST TRUE BOOL "Use 'SFML' version 2.x from GIT repository?")
 set_option(SFML_REVISION_TAG "" STRING "Which 'SFML' revision/tag to use?")
 set_option(SFML_BUILD_DOCS FALSE BOOL "Build 'SFML' documentation?")
 set_option(SFML_BUILD_EXAMPLES FALSE BOOL "Build 'SFML' examples?")
@@ -25,7 +25,7 @@ if(SFML_USE_LATEST)
     ftp opengl pong shader sockets sound sound-capture voip win32 window)
 else(SFML_USE_LATEST)
   set_option(SFML_URL
-    "http://gqe.googlecode.com/files/SFML-1.6.3-cmake.zip"
+    "http://gqe.googlecode.com/files/SFML-1.6.4-cmake.zip"
     STRING
     "URL for getting older 'SFML' version")
 
