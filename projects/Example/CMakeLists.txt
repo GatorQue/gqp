@@ -8,6 +8,7 @@
 # Modification Log:
 # 2012-02-06 Initial version
 # 2012-02-11 Fix typo and added source files checking
+# 2012-04-03 Fix missing libraries when using modules without components
 #
 
 # Set our project name, which is the name of the current directory
@@ -46,6 +47,9 @@ foreach(EXTERNAL_NAME ${${SUBPROJECT_NAME}_DEPS})
     add_definitions(${${EXTERNAL_NAME}_DEFS})
   endif(${EXTERNAL_NAME}_DEFS)
 
+  # Add the libraries listed for this dependency
+  set(${SUBPROJECT_NAME}_LIBS ${${SUBPROJECT_NAME}_LIBS} ${${EXTERNAL_NAME}_LIBRARIES})
+
   # Look for dependencies to this external dependency
   foreach(SUBEXTERNAL_NAME ${${EXTERNAL_NAME}_DEPS})
     # Try to find this external dependency package
@@ -58,6 +62,9 @@ foreach(EXTERNAL_NAME ${${SUBPROJECT_NAME}_DEPS})
     if(${SUBEXTERNAL_NAME}_DEFS)
       add_definitions(${${SUBEXTERNAL_NAME}_DEFS})
     endif(${SUBEXTERNAL_NAME}_DEFS)
+
+    # Add the libraries listed for this dependency
+    set(${SUBPROJECT_NAME}_LIBS ${${SUBPROJECT_NAME}_LIBS} ${${SUBEXTERNAL_NAME}_LIBRARIES})
 
     # Loop through each component and get the libraries
     foreach(COMPONENT_NAME ${${SUBEXTERNAL_NAME}_COMPONENTS})

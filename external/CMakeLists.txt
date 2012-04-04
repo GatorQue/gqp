@@ -5,6 +5,7 @@
 # 2012-02-04 Initial version
 # 2012-02-11 Remove extra copy step, less duplication of files
 # 2012-03-23 Move to new directory and simplify handling of external projects
+# 2012-04-03 Fix case sensitive module name issues
 #
 
 # Create a project name for the external 3rd party project files
@@ -39,7 +40,7 @@ foreach(EXTERNAL_CMAKE_DIR ${EXTERNAL_CMAKES})
     find_package(${EXTERNAL_NAME} COMPONENTS ${${EXTERNAL_NAME}_COMPONENTS})
 
     # Force local module or local module the only one found?
-    if(NOT USE_PRECOMPILED_EXTERNAL OR ${EXTERNAL_CMAKE_DIR}_LOCAL)
+    if(NOT USE_PRECOMPILED_EXTERNAL OR ${EXTERNAL_NAME}_LOCAL)
       # Add the subdirectory target if enabled
       add_subdirectory(${EXTERNAL_CMAKE_DIR})
 
@@ -57,7 +58,7 @@ foreach(EXTERNAL_CMAKE_DIR ${EXTERNAL_CMAKES})
           endforeach()
         endforeach()
       endforeach()
-    endif(NOT USE_PRECOMPILED_EXTERNAL OR ${EXTERNAL_CMAKE_DIR}_LOCAL)
+    endif(NOT USE_PRECOMPILED_EXTERNAL OR ${EXTERNAL_NAME}_LOCAL)
   endif(${${EXTERNAL_NAME}_ENABLED})
 endforeach(EXTERNAL_CMAKE_DIR ${EXTERNAL_CMAKES})
 

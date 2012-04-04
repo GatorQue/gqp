@@ -66,10 +66,14 @@ set(COPY_BOX2D_INCLUDE
   -E copy_directory
   ${PROJECT_BINARY_DIR}/install/include
   ${EXTERNAL_INCLUDE_DIR})
-set(COPY_BOX2D_DOC
+set(COPY_BOX2D_DOC1
   -E copy_directory
   ${PROJECT_BINARY_DIR}/install/share/doc/Box2D/Documentation
   ${EXTERNAL_DOC_DIR}/${PROJECT_NAME})
+set(COPY_BOX2D_DOC2
+  -E copy_directory
+  ${TOPLEVEL_DIR}/${PROJECT_NAME}/Box2D/html
+  ${EXTERNAL_DOC_DIR}/${PROJECT_NAME}/html)
 set(COPY_BOX2D_CMAKE
   -E copy_directory
   ${PROJECT_BINARY_DIR}/install/Box2D
@@ -96,7 +100,6 @@ set(COPY_BOX2D_LICENSE
   ${TOPLEVEL_DIR}/${PROJECT_NAME}/Box2D/License.txt
   ${EXTERNAL_LICENSE_DIR}/${PROJECT_NAME}-license.txt)
 
-
 # Step 3b: Create a custom target to install and copy the compiled libraries,
 # binary files, include files, and documentation to the EXTERNAL_DIR folder
 add_custom_target(INSTALL-${PROJECT_NAME}
@@ -114,7 +117,8 @@ add_custom_command(
   COMMAND ${CMAKE_COMMAND} ${COPY_BOX2D_BIN}
   COMMAND ${CMAKE_COMMAND} ${COPY_BOX2D_LIB}
   COMMAND ${CMAKE_COMMAND} ${COPY_BOX2D_INCLUDE}
-  COMMAND ${CMAKE_COMMAND} ${COPY_BOX2D_DOC}
+  COMMAND ${CMAKE_COMMAND} ${COPY_BOX2D_DOC1}
+  COMMAND ${CMAKE_COMMAND} ${COPY_BOX2D_DOC2}
   COMMAND ${CMAKE_COMMAND} ${COPY_BOX2D_CMAKE}
   COMMAND ${CMAKE_COMMAND} ${COPY_BOX2D_EXAMPLE1}
   COMMAND ${CMAKE_COMMAND} ${COPY_BOX2D_EXAMPLE2}
@@ -123,15 +127,11 @@ add_custom_command(
   WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/clone
   VERBATIM)
 
-## Step 3d: Build documentation now if enabled and Doxygen was found
-#if(BOX2D_BUILD_DOCS AND DOXYGEN_FOUND)
-#  if(NOT EXISTS ${TOUCH_DIR}/${PROJECT_NAME}-docs)
-#    execute_process(
-#      COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile.txt
-#      COMMAND ${CMAKE_COMMAND} -E touch ${TOUCH_DIR}/${PROJECT_NAME}-docs
-#      WORKING_DIRECTORY ${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR}/doc)
-#  endif(NOT EXISTS ${TOUCH_DIR}/${PROJECT_NAME}-docs)
-#endif(BOX2D_BUILD_DOCS AND DOXYGEN_FOUND)
+# Step 3d: Build documentation now if enabled and Doxygen was found
+if(BOX2D_BUILD_DOCS AND DOXYGEN_FOUND)
+  set(PROJECT_DOC_DIR ${TOPLEVEL_DIR}/${PROJECT_NAME}/Box2D)
+  add_subdirectory(doc)
+endif(BOX2D_BUILD_DOCS AND DOXYGEN_FOUND)
 
 # Step 3e: Add each library provided by this module as a dependency
 foreach(MODULE_NAME ${${EXTERNAL_NAME}_LIBS})

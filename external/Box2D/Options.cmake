@@ -6,7 +6,7 @@
 #
 
 # Thor library options
-set_option(BOX2D_ENABLED TRUE BOOL "Build 'Box2Dr' 3rdparty/external libraries?")
+set_option(BOX2D_ENABLED TRUE BOOL "Build 'Box2D' 3rdparty/external libraries?")
 set_option(BOX2D_SHARED_LIBRARIES FALSE BOOL "Build 'Box2D' shared libraries?")
 set_option(BOX2D_REVISION_TAG "" STRING "Which 'Box2D' revision/tag to use?")
 set_option(BOX2D_BUILD_DOCS FALSE BOOL "Build 'Box2D' documentation?")
@@ -68,7 +68,7 @@ if(BOX2D_ENABLED)
 
   # Define the include directory to reference for this external module
   set(FIND_INCLUDE_DIR
-    ${TOPLEVEL_DIR}/${EXTERNAL_OPTION_DIR}/include)
+    ${TOPLEVEL_DIR}/${EXTERNAL_OPTION_DIR}/Box2D)
 
   # Create the Find.cmake module for this external module
   configure_file(${PROJECT_SOURCE_DIR}/${EXTERNAL_OPTION_DIR}/FindModule.in
