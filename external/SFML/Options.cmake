@@ -35,13 +35,22 @@ else(SFML_USE_LATEST)
 endif(SFML_USE_LATEST)
 
 # Create a list of libraries provided by this 3rd party/external module
-set(SFML_LIBS
-  sfml-audio sfml-graphics sfml-window sfml-network sfml-system sfml-main)
+if(WINDOWS)
+  set(SFML_LIBS
+    sfml-audio sfml-graphics sfml-window sfml-network sfml-system sfml-main)
+else(WINDOWS)
+  set(SFML_LIBS
+    sfml-audio sfml-graphics sfml-window sfml-network sfml-system)
+endif(WINDOWS)
 # Push the list to the parent scope for projects to reference
 set(SFML_LIBS ${SFML_LIBS} PARENT_SCOPE)
 
 # Create a list of components provided by this external module
-set(SFML_COMPONENTS AUDIO GRAPHICS WINDOW NETWORK SYSTEM MAIN)
+if(WINDOWS)
+  set(SFML_COMPONENTS AUDIO GRAPHICS WINDOW NETWORK SYSTEM MAIN)
+else(WINDOWS)
+  set(SFML_COMPONENTS AUDIO GRAPHICS WINDOW NETWORK SYSTEM)
+endif(WINDOWS)
 # Push this list to the parent scope for projects to reference
 set(SFML_COMPONENTS ${SFML_COMPONENTS} PARENT_SCOPE)
 
@@ -71,8 +80,12 @@ if(SFML_ENABLED)
   set(FIND_GRAPHICS_LIBRARY sfml-graphics)
   set(FIND_WINDOW_LIBRARY   sfml-window)
   set(FIND_NETWORK_LIBRARY  sfml-network)
-  set(FINDL_SYSTEM_LIBRARY   sfml-system)
-  set(FIND_MAIN_LIBRARY     sfml-main)
+  set(FIND_SYSTEM_LIBRARY   sfml-system)
+  if(WINDOWS)
+    set(FIND_MAIN_LIBRARY   sfml-main)
+  else(WINDOWS)
+    set(FIND_MAIN_LIBRARY)
+  endif(WINDOWS)
 
   # Define the global list of libraries produced by this external module
   set(FIND_LIBRARIES

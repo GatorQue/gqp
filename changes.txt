@@ -1,3 +1,10 @@
+Version 0.9.1
+=============
+- Fix SFML main issues
+- Fix fake FindXYZ.cmake case sensitivity issues
+- Fix Example SFML2 issues
+- Disable Thor for now until it becomes SFML2 compatible
+
 Version 0.9.0
 =============
 - Fix fake FindXYZ.cmake case sensitivity issue

@@ -6,7 +6,7 @@
 #
 
 # Thor library options
-set_option(THOR_ENABLED TRUE BOOL "Build 'Thor' 3rdparty/external libraries?")
+set_option(THOR_ENABLED FALSE BOOL "Build 'Thor' 3rdparty/external libraries?")
 # THOR_SHARED_LIBRARIES is fixed to SFML_SHARED_LIBRARIES
 #set_option(THOR_SHARED_LIBRARIES TRUE BOOL "Build 'Thor' shared libraries?")
 set_option(THOR_REVISION_TAG "" STRING "Which 'Thor' revision/tag to use?")

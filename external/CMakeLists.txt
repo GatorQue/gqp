@@ -37,7 +37,7 @@ foreach(EXTERNAL_CMAKE_DIR ${EXTERNAL_CMAKES})
   # First see if this module is enabled
   if(${${EXTERNAL_NAME}_ENABLED})
     # Now see if a prebuilt version already exists
-    find_package(${EXTERNAL_NAME} COMPONENTS ${${EXTERNAL_NAME}_COMPONENTS})
+    find_package(${EXTERNAL_CMAKE_DIR} COMPONENTS ${${EXTERNAL_NAME}_COMPONENTS})
 
     # Force local module or local module the only one found?
     if(NOT USE_PRECOMPILED_EXTERNAL OR ${EXTERNAL_NAME}_LOCAL)

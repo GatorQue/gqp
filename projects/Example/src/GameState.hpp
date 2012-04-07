@@ -12,7 +12,11 @@
 #include <GQE/Core/Core_types.hpp>
 #include <GQE/Core/interfaces/IState.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+#if (SFML_VERSION_MAJOR < 2)
 #include <SFML/Graphics/String.hpp>
+#else
+#include <SFML/Graphics/Text.hpp>
+#endif
 
 /// Provides the TicTacToe GameState example
 class GameState : public GQE::IState

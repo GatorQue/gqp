@@ -10,7 +10,7 @@
 # 2012-02-11 Fix typo and added source files checking
 # 2012-03-23 Simplify the CMakeLists.txt file for skeleton projects
 # 2012-04-03 Fix missing libraries when using modules without components
-#
+# 2012-04-07 Fix case sensitivity issues
 
 # Set our project name, which is the name of the current directory
 project(${SUBPROJECT_CMAKE_DIR})
@@ -36,9 +36,12 @@ include(${PROJECT_SOURCE_DIR}/Options.cmake)
 
 # Loop through this projects external dependencies and Find each of them
 set(${SUBPROJECT_NAME}_LIBS)
-foreach(EXTERNAL_NAME ${${SUBPROJECT_NAME}_DEPS})
+foreach(EXTERNAL_DEP ${${SUBPROJECT_NAME}_DEPS})
+  # Get the uppercase version of the subdirectory name
+  string(TOUPPER ${EXTERNAL_DEP} EXTERNAL_NAME)
+
   # Try to find this external dependency package
-  find_package(${EXTERNAL_NAME} REQUIRED COMPONENTS ${${EXTERNAL_NAME}_COMPONENTS})
+  find_package(${EXTERNAL_DEP} REQUIRED COMPONENTS ${${EXTERNAL_NAME}_COMPONENTS})
 
   # Add the include directories to our list of include directories
   include_directories(${${EXTERNAL_NAME}_INCLUDE_DIR})
@@ -52,9 +55,12 @@ foreach(EXTERNAL_NAME ${${SUBPROJECT_NAME}_DEPS})
   set(${SUBPROJECT_NAME}_LIBS ${${SUBPROJECT_NAME}_LIBS} ${${EXTERNAL_NAME}_LIBRARIES})
 
   # Look for dependencies to this external dependency
-  foreach(SUBEXTERNAL_NAME ${${EXTERNAL_NAME}_DEPS})
+  foreach(SUBEXTERNAL_DEP ${${EXTERNAL_NAME}_DEPS})
+    # Get the uppercase version of the subdirectory name
+    string(TOUPPER ${SUBEXTERNAL_DEP} SUBEXTERNAL_NAME)
+
     # Try to find this external dependency package
-    find_package(${SUBEXTERNAL_NAME} REQUIRED COMPONENTS ${${SUBEXTERNAL_NAME}_COMPONENTS})
+    find_package(${SUBEXTERNAL_DEP} REQUIRED COMPONENTS ${${SUBEXTERNAL_NAME}_COMPONENTS})
 
     # Add the include directories to our list of include directories
     include_directories(${${SUBEXTERNAL_NAME}_INCLUDE_DIR})
