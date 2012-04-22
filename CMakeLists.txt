@@ -19,16 +19,16 @@ if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 endif(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 
 # Define the path of our additional External CMake modules
-set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
 
 # Include the top level macros to be used by all projects
-include(${CMAKE_SOURCE_DIR}/cmake/Macros.cmake)
+include(${PROJECT_SOURCE_DIR}/cmake/Macros.cmake)
 
 # Include the top level functions to be used by all projects
-include(${CMAKE_SOURCE_DIR}/cmake/Functions.cmake)
+include(${PROJECT_SOURCE_DIR}/cmake/Functions.cmake)
 
 # Include the top level options to be used by all projects
-include(${CMAKE_SOURCE_DIR}/cmake/Options.cmake)
+include(${PROJECT_SOURCE_DIR}/cmake/Options.cmake)
 
 # Add the external/3rd party directory first
 add_subdirectory(external)
