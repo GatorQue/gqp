@@ -1,3 +1,8 @@
+Version 0.9.2
+=============
+- Fix SFML 2.0 RC issues
+- Add arial font to example program due to default font bug with SFML 2.0
+
 Version 0.9.1
 =============
 - Fix SFML main issues
