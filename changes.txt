@@ -1,0 +1,52 @@
+Version 0.9.1
+=============
+- Fix SFML main issues
+- Fix fake FindXYZ.cmake case sensitivity issues
+- Fix Example SFML2 issues
+- Disable Thor for now until it becomes SFML2 compatible
+
+Version 0.9.0
+=============
+- Fix fake FindXYZ.cmake case sensitivity issue
+- Fix other Box2D include directory issues
+
+Version 0.8.1
+=============
+- Change SFML to default to 2.0 version
+- Fix SFML v1.6 respository to use version 1.6.4 version which fixes an issue in the src/SFML/Network/CMakeLists.txt file
+
+Version 0.8.0
+=============
+- Added Box2D external library support
+- Added GQE-entities and spacedots example program support
+
+Version 0.7.0
+=============
+- Fix issues with post_build copy of binary files and SFML2 changes to Example
+
+Version 0.6.0
+=============
+- Now builds external libraries and projects all within one solution file.
+
+Version 0.5.0
+=============
+- Several general fixes
+- License file fixes
+- Added Thor library (default SFML to get latest)
+
+Version 0.4.0
+==============
+- Initial release to Google Code project site
+- Documentation updates and tutorials
+
+Version 0.3.0
+==============
+- Bug fixes for Visual Studio linker issues
+
+Version 0.2.0
+==============
+- Bug fixes for TOPLEVEL_DIR and other option issues
+
+Version 0.1.0
+==============
+- Initial beta release of working project
