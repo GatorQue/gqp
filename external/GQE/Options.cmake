@@ -17,12 +17,12 @@ set_option(GQE_URL
   "Mercurial URL to obtain latest 'GQE' version")
 
 # Create a list of libraries provided by this external module
-set(GQE_LIBS gqe-core)
+set(GQE_LIBS gqe-core gqe-entity)
 # Push the list to the parent scope for projects to reference
 set(GQE_LIBS ${GQE_LIBS} PARENT_SCOPE)
 
 # Create a list of components provided by this external module
-set(GQE_COMPONENTS CORE ENTITIES)
+set(GQE_COMPONENTS CORE ENTITY)
 # Push this list to the parent scope for projects to reference
 set(GQE_COMPONENTS ${GQE_COMPONENTS} PARENT_SCOPE)
 
@@ -58,12 +58,12 @@ set(GQE_LIB_DEPS ${GQE_LIB_DEPS} PARENT_SCOPE)
 if(GQE_ENABLED)
   # Define the libraries produced by this external module
   set(FIND_CORE_LIBRARY gqe-core)
-  set(FIND_ENTITIES_LIBRARY gqe-entities)
+  set(FIND_ENTITY_LIBRARY gqe-entity)
 
   # Define the global list of libraries produced by this external module
   set(FIND_LIBRARIES
     ${FIND_CORE_LIBRARY}
-    ${FIND_ENTITIES_LIBRARY})
+    ${FIND_ENTITY_LIBRARY})
 
   # Define the include directory to reference for this external module
   set(FIND_INCLUDE_DIR
