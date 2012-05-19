@@ -9,10 +9,10 @@
 #ifndef   TIC_TAC_TOE_APP_HPP_INCLUDED
 #define   TIC_TAC_TOE_APP_HPP_INCLUDED
  
-#include <GQE/Core/classes/App.hpp>
+#include <GQE/Core/interfaces/IApp.hpp>
  
 /// Provides the core game loop algorithm for all game engines.
-class TicTacToeApp : public GQE::App
+class TicTacToeApp : public GQE::IApp
 {
 public:
   /**
@@ -28,9 +28,23 @@ public:
 
 protected:
   /**
-   * Init is responsible for initializing the Application.
-   */
-  virtual void Init(void);
+    * InitAssetHandlers is responsible for registering custom IAssetHandler
+    * derived classes for a specific game application.
+    */
+  virtual void InitAssetHandlers(void);
+
+  /**
+    * InitScreenFactory is responsible for initializing any IScreen derived
+    * classes with the ScreenManager class that will be used to create new
+    * IScreen derived classes as requested.
+    */
+  virtual void InitScreenFactory(void);
+
+  /**
+    * HandleCleanup is responsible for performing any custom last minute
+    * Application cleanup steps before exiting the Application.
+    */
+  virtual void HandleCleanup(void);
 
 private:
 }; // class TicTacToeApp

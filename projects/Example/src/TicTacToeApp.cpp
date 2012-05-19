@@ -10,7 +10,7 @@
 #include "GameState.hpp"
  
 TicTacToeApp::TicTacToeApp(const std::string theTitle) :
-    GQE::App(theTitle)
+    GQE::IApp(theTitle)
 {
 }
 
@@ -18,8 +18,18 @@ TicTacToeApp::~TicTacToeApp()
 {
 }
 
-void TicTacToeApp::Init(void)
+void TicTacToeApp::InitAssetHandlers(void)
 {
-  // Add Menu State as the next active state
+  // No custom asset handlers needed or provided
+}
+
+void TicTacToeApp::InitScreenFactory(void)
+{
+  // Add Game State as the next active state
   mStateManager.AddActiveState(new(std::nothrow) GameState(*this));
+}
+
+void TicTacToeApp::HandleCleanup(void)
+{
+  // No custom cleanup needed
 }
