@@ -3,6 +3,7 @@
 #   external library for you to reference.
 # Modification Log:
 # 2012-03-28 Initial version
+# 2012-05-25 Fix small build order issues and PROJECT_NAME issue
 #
 
 # Define the project name (current directory)
@@ -10,9 +11,17 @@ project(${EXTERNAL_CMAKE_DIR})
 
 # Step 1: Download version from repository
 if(NOT EXISTS ${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR})
+  # Step 1a: Clone the Box2D source from the SVN repository
   CloneSubversion(${BOX2D_URL}
     ${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR}
     ${BOX2D_REVISION_TAG})
+
+  # Step 1b: Replace the buggy CMakeLists.txt file with local copy until Issue 272
+  # is resolved.
+  execute_process(
+    COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/CMakeLists-replace.txt
+    ${TOPLEVEL_DIR}/${PROJECT_NAME}/Box2D/Box2D/CMakeLists.txt)
+
 else(NOT EXISTS ${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR})
   # TODO: Add "update from repository" or skip build below step
 endif(NOT EXISTS ${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR})
@@ -27,13 +36,7 @@ set(BOX2D_INSTALL ON CACHE BOOL "Install Box2D" FORCE)
 set(BOX2D_INSTALL_DOC ${BOX2D_BUILD_DOCS} CACHE BOOL "Install Documenation" FORCE)
 set(LIB_INSTALL_DIR ${PROJECT_BINARY_DIR}/install)
 
-# Step 2b: Replace the buggy CMakeLists.txt file with local copy until Issue 272
-# is resolved.
-execute_process(
-  COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/CMakeLists-replace.txt
-  ${TOPLEVEL_DIR}/${PROJECT_NAME}/Box2D/Box2D/CMakeLists.txt)
-
-# Step 2c: Add the clone directory to be built
+# Step 2b: Add the clone directory to be built
 add_subdirectory(${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR}/Box2D
   ${PROJECT_BINARY_DIR}/clone)
 
