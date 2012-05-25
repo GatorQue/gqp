@@ -1,3 +1,8 @@
+Verison 0.10.0
+==============
+- Fix minor build order issue in Box2D and PROJECT_NAME dependency problems
+- Added TinyXML external project module
+
 Version 0.9.2
 =============
 - Fix SFML 2.0 RC issues

@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
   int anExitCode = GQE::StatusNoError;
  
   // Create a FileLogger and make it the default logger before creating our App
-  GQE::FileLogger anLogger("output.txt");
+  GQE::FileLogger anLogger("output.txt", true);
 
   // Create our action application.
   GQE::IApp* anApp = new(std::nothrow) TicTacToeApp();

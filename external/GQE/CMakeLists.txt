@@ -5,6 +5,7 @@
 # 2012-01-13 Initial version
 # 2012-02-11 Add cmake module path to configure step. Also change install path
 #   to a directory to prevent any future copy issues.
+# 2012-05-25 Fix PROJECT_NAME issue
 #
 
 # Define the project name (current directory)
@@ -95,13 +96,13 @@ if(GQE_BUILD_DOCS AND DOXYGEN_FOUND)
 endif(GQE_BUILD_DOCS AND DOXYGEN_FOUND)
 
 # Step 3e: Add each library provided by this module as a dependency
-foreach(MODULE_NAME ${${PROJECT_NAME}_LIBS})
+foreach(MODULE_NAME ${${EXTERNAL_NAME}_LIBS})
   add_dependencies(INSTALL-${PROJECT_NAME} ${MODULE_NAME})
-endforeach(MODULE_NAME ${${PROJECT_NAME}_LIBS})
+endforeach(MODULE_NAME ${${EXTERNAL_NAME}_LIBS})
 
 # Step 3f: Add example dependency for this module
 if(GQE_BUILD_EXAMPLES)
-  foreach(EXAMPLE_NAME ${${PROJECT_NAME}_EXAMPLES})
+  foreach(EXAMPLE_NAME ${${EXTERNAL_NAME}_EXAMPLES})
     add_dependencies(INSTALL-${PROJECT_NAME} ${EXAMPLE_NAME})
   endforeach()
 endif(GQE_BUILD_EXAMPLES)
