@@ -12,13 +12,13 @@
 project(${EXTERNAL_CMAKE_DIR})
 
 # Step 1: Download version from repository if repository doesn't exist
-if(NOT EXISTS ${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR})
+if(NOT EXISTS ${TOPLEVEL_DIR}/${PROJECT_NAME})
   CloneMercurial(${GQE_URL}
-    ${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR}
+    ${TOPLEVEL_DIR}/${PROJECT_NAME}
     ${GQE_REVISION_TAG})
-else(NOT EXISTS ${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR})
+else(NOT EXISTS ${TOPLEVEL_DIR}/${PROJECT_NAME})
   # TODO: Add "update from repository" or skip build below step
-endif(NOT EXISTS ${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR})
+endif(NOT EXISTS ${TOPLEVEL_DIR}/${PROJECT_NAME})
 
 # Step 2a: Define some custom variables that define this modules build
 # Create the SFML_STATIC_LIBRARIES variable for our use below
@@ -35,7 +35,7 @@ set(OLD_CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
 set(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/install)
 
 # Step 2b: Add the clone directory to be built
-add_subdirectory(${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR}
+add_subdirectory(${TOPLEVEL_DIR}/${PROJECT_NAME}
   ${PROJECT_BINARY_DIR}/clone)
 
 # Step 3a: Define which directories to copy to EXTERNAL_DIR and its folders

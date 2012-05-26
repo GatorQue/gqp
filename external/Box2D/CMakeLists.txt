@@ -1,5 +1,5 @@
 # Filename: CMakeLists.txt
-# Description: This will install the Thor source and include files into the
+# Description: This will install the Box2D source and include files into the
 #   external library for you to reference.
 # Modification Log:
 # 2012-03-28 Initial version
@@ -10,10 +10,10 @@
 project(${EXTERNAL_CMAKE_DIR})
 
 # Step 1: Download version from repository
-if(NOT EXISTS ${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR})
+if(NOT EXISTS ${TOPLEVEL_DIR}/${PROJECT_NAME})
   # Step 1a: Clone the Box2D source from the SVN repository
   CloneSubversion(${BOX2D_URL}
-    ${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR}
+    ${TOPLEVEL_DIR}/${PROJECT_NAME}
     ${BOX2D_REVISION_TAG})
 
   # Step 1b: Replace the buggy CMakeLists.txt file with local copy until Issue 272
@@ -22,9 +22,9 @@ if(NOT EXISTS ${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR})
     COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/CMakeLists-replace.txt
     ${TOPLEVEL_DIR}/${PROJECT_NAME}/Box2D/Box2D/CMakeLists.txt)
 
-else(NOT EXISTS ${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR})
+else(NOT EXISTS ${TOPLEVEL_DIR}/${PROJECT_NAME})
   # TODO: Add "update from repository" or skip build below step
-endif(NOT EXISTS ${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR})
+endif(NOT EXISTS ${TOPLEVEL_DIR}/${PROJECT_NAME})
 
 # Step 2a: Define some custom variables that define this modules build
 set(OLD_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
@@ -37,7 +37,7 @@ set(BOX2D_INSTALL_DOC ${BOX2D_BUILD_DOCS} CACHE BOOL "Install Documenation" FORC
 set(LIB_INSTALL_DIR ${PROJECT_BINARY_DIR}/install)
 
 # Step 2b: Add the clone directory to be built
-add_subdirectory(${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR}/Box2D
+add_subdirectory(${TOPLEVEL_DIR}/${PROJECT_NAME}/Box2D
   ${PROJECT_BINARY_DIR}/clone)
 
 # Step 3a: Define which directories to copy to EXTERNAL_DIR and its folders

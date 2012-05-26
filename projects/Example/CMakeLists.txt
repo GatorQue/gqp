@@ -93,7 +93,11 @@ file(GLOB_RECURSE ${SUBPROJECT_NAME}_SOURCES
   ${PROJECT_SOURCE_DIR}/src/*.cpp
   ${PROJECT_SOURCE_DIR}/src/*.cxx
   ${PROJECT_SOURCE_DIR}/src/*.cc
-  ${PROJECT_SOURCE_DIR}/src/*.c)
+  ${PROJECT_SOURCE_DIR}/src/*.c
+  ${PROJECT_SOURCE_DIR}/src/*.hpp
+  ${PROJECT_SOURCE_DIR}/src/*.hxx
+  ${PROJECT_SOURCE_DIR}/src/*.hh
+  ${PROJECT_SOURCE_DIR}/src/*.h)
 
 # Add executable if source files were found
 if(${SUBPROJECT_NAME}_SOURCES)

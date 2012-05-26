@@ -1,11 +1,11 @@
 # Filename: Options.cmake
-# Description: Define the Thor external 3rd party library options used in the
+# Description: Define the Box2D external 3rd party library options used in the
 #   CMakeList.txt file.
 # Modification Log:
 # 2012-01-13 Initial version
 #
 
-# Thor library options
+# Box2D library options
 set_option(BOX2D_ENABLED TRUE BOOL "Build 'Box2D' 3rdparty/external libraries?")
 set_option(BOX2D_SHARED_LIBRARIES FALSE BOOL "Build 'Box2D' shared libraries?")
 set_option(BOX2D_REVISION_TAG "" STRING "Which 'Box2D' revision/tag to use?")

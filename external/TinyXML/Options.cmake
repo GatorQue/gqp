@@ -2,17 +2,22 @@
 # Description: Define the TinyXML external 3rd party library options used in
 #   the CMakeList.txt file.
 # Modification Log:
-# 2012-01-13 Initial version
+# 2012-05-25 Initial version
+# 2012-05-25 Allow shared libraries for non-Windows systems and fixed include dir
 #
 
 # TINYXML library options
 set_option(TINYXML_ENABLED TRUE BOOL "Build 'TinyXML' 3rdparty/external libraries?")
-# TINYXML only supports Static library builds
-set_option(TINYXML_SHARED_LIBRARIES FALSE BOOL "Build 'TinyXML' shared libraries?")
+if(WINDOWS)
+  # TINYXML only supports Static library builds for Windows
+  set_option(TINYXML_SHARED_LIBRARIES FALSE BOOL "Build 'TinyXML' shared libraries?")
+else(WINDOWS)
+  set_option(TINYXML_SHARED_LIBRARIES TRUE BOOL "Build 'TinyXML' shared libraries?")
+endif(WINDOWS)
+
 # TINYXML supports both STL and non-STL builds
 set_option(TINYXML_USE_STL TRUE BOOL "Enable STL use for 'TinyXML' library?")
-set_option(TINYXML_REVISION_TAG "" STRING "Which 'TinyXML' revision/tag to use?")
-set_option(TINYXML_BUILD_DOCS TRUE BOOL "Build 'TinyXML' documentation?")
+set_option(TINYXML_BUILD_DOCS FALSE BOOL "Build 'TinyXML' documentation?")
 # TINYXML doesn't provide examples
 set_option(TINYXML_BUILD_EXAMPLES FALSE BOOL "Build 'TinyXML' examples?")
 
@@ -38,6 +43,8 @@ set(TINYXML_COMPONENTS ${TINYXML_COMPONENTS} PARENT_SCOPE)
 # Create a list of definitions for projects to use
 if(TINYXML_USE_STL)
   set(TINYXML_DEFS -DTIXML_USE_STL)
+else(TINYXML_USE_STL)
+  set(TINYXML_DEFS)
 endif(TINYXML_USE_STL)
 # Push the list to the parent scope for projects to reference
 set(TINYXML_DEFS ${TINYXML_DEFS} PARENT_SCOPE)
@@ -61,7 +68,10 @@ if(TINYXML_ENABLED)
 
   # Define the include directory to reference for this external module
   set(FIND_INCLUDE_DIR
-    ${TOPLEVEL_DIR}/${EXTERNAL_OPTION_DIR}/include)
+    ${TOPLEVEL_DIR}/${EXTERNAL_OPTION_DIR})
+
+  # Define the definitions that should used with this library
+  set(FIND_DEFS ${TINYXML_DEFS})
 
   # Create the Find.cmake module for this external module
   configure_file(${PROJECT_SOURCE_DIR}/${EXTERNAL_OPTION_DIR}/FindModule.in

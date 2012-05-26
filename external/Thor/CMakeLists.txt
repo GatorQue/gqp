@@ -10,13 +10,13 @@
 project(${EXTERNAL_CMAKE_DIR})
 
 # Step 1: Download version from repository
-if(NOT EXISTS ${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR})
+if(NOT EXISTS ${TOPLEVEL_DIR}/${PROJECT_NAME})
   CloneSubversion(${THOR_URL}
-    ${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR}
+    ${TOPLEVEL_DIR}/${PROJECT_NAME}
     ${THOR_REVISION_TAG})
-else(NOT EXISTS ${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR})
+else(NOT EXISTS ${TOPLEVEL_DIR}/${PROJECT_NAME})
   # TODO: Add "update from repository" or skip build below step
-endif(NOT EXISTS ${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR})
+endif(NOT EXISTS ${TOPLEVEL_DIR}/${PROJECT_NAME})
 
 # Step 2a: Define some custom variables that define this modules build
 set(OLD_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
@@ -27,10 +27,10 @@ set(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/install)
 # Step 2b: Add this projects clone include directory because this project used
 # CMAKE_SOURCE_DIR instead of PROJECT_SOURCE_DIR which prevents it from being
 # used as a subproject correctly.
-include_directories(${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR}/include)
+include_directories(${TOPLEVEL_DIR}/${PROJECT_NAME}/include)
 
 # Step 2c: Add the clone directory to be built
-add_subdirectory(${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR}
+add_subdirectory(${TOPLEVEL_DIR}/${PROJECT_NAME}
   ${PROJECT_BINARY_DIR}/clone)
 
 # Step 3a: Define which directories to copy to EXTERNAL_DIR and its folders
@@ -48,7 +48,7 @@ set(COPY_THOR_INCLUDE
   ${EXTERNAL_INCLUDE_DIR})
 set(COPY_THOR_DOC
   -E copy_directory
-  ${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR}/doc/html
+  ${TOPLEVEL_DIR}/${PROJECT_NAME}/doc/html
   ${EXTERNAL_DOC_DIR}/${PROJECT_NAME})
 set(COPY_THOR_CMAKE
   -E copy
@@ -91,7 +91,7 @@ if(THOR_BUILD_DOCS AND DOXYGEN_FOUND)
     execute_process(
       COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile.txt
       COMMAND ${CMAKE_COMMAND} -E touch ${TOUCH_DIR}/${PROJECT_NAME}-docs
-      WORKING_DIRECTORY ${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR}/doc)
+      WORKING_DIRECTORY ${TOPLEVEL_DIR}/${PROJECT_NAME}/doc)
   endif(NOT EXISTS ${TOUCH_DIR}/${PROJECT_NAME}-docs)
 endif(THOR_BUILD_DOCS AND DOXYGEN_FOUND)
 

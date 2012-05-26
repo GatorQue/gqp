@@ -15,11 +15,11 @@
 project(${EXTERNAL_CMAKE_DIR})
 
 # Step 1: Determine which version to download for this module
-if(NOT EXISTS ${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR})
+if(NOT EXISTS ${TOPLEVEL_DIR}/${PROJECT_NAME})
   if(SFML_USE_LATEST)
     # Step 1a: Get the latest version from Git
     CloneGit(${SFML_URL}
-      ${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR}
+      ${TOPLEVEL_DIR}/${PROJECT_NAME}
       ${SFML_REVISION_TAG})
   else(SFML_USE_LATEST)
     # Step 1a: Get the previous version
@@ -29,11 +29,11 @@ if(NOT EXISTS ${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR})
 
     # Step 1b: Extract download zip file to clone directory
     ExtractFile(${PROJECT_BINARY_DIR}/download.zip
-      ${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR})
+      ${TOPLEVEL_DIR}/${PROJECT_NAME})
   endif(SFML_USE_LATEST)
-else(NOT EXISTS ${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR})
+else(NOT EXISTS ${TOPLEVEL_DIR}/${PROJECT_NAME})
   # TODO: Add "update from repository" or skip build below step
-endif(NOT EXISTS ${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR})
+endif(NOT EXISTS ${TOPLEVEL_DIR}/${PROJECT_NAME})
 
 # Step 2a: Define some custom variables that define this modules build
 set(BUILD_DOC ${SFML_BUILD_DOCS})
@@ -44,7 +44,7 @@ set(OLD_CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
 set(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/install)
 
 # Step 2b: Add the clone directory to be built
-add_subdirectory(${TOPLEVEL_DIR}/${EXTERNAL_CMAKE_DIR}
+add_subdirectory(${TOPLEVEL_DIR}/${PROJECT_NAME}
   ${PROJECT_BINARY_DIR}/clone)
 
 # Step 3a: Define which directories to copy to EXTERNAL_DIR and its folders

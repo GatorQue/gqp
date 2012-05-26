@@ -10,8 +10,14 @@ if(TINYXML_INCLUDE_DIR)
   set(TINYXML_FIND_QUIETLY TRUE)
 endif(TINYXML_INCLUDE_DIR)
 
-find_path(TINYXML_INCLUDE_DIR tinyxml/tinyxml.h
-  PATH_SUFFIXES include
+# deduce the libraries suffix from the options
+set(FIND_LIB_SUFFIX "")
+if(NOT BUILD_SHARED_LIBRARIES)
+  set(FIND_LIB_SUFFIX "${FIND_LIB_SUFFIX}-s")
+endif()
+
+find_path(TINYXML_INCLUDE_DIR tinyxml.h
+  PATH_SUFFIXES tinyxml
   PATHS
   ~/Library/Frameworks
   /Library/Frameworks
@@ -21,11 +27,11 @@ find_path(TINYXML_INCLUDE_DIR tinyxml/tinyxml.h
   /opt/local   # DarwinPorts
   /opt/csw     # Blastwave
   /opt
-  ${TINYXMLDIR}
-  $ENV{TINYXMLDIR})
+  ${TINYXMLDIR}/include
+  $ENV{TINYXMLDIR}/include)
 
 find_library(TINYXML_LIBRARY_DEBUG
-  tinyxml-d
+  tinyxml-d${FIND_LIB_SUFFIX}
   PATH_SUFFIXES lib64 lib
   PATHS
   ~/Library/Frameworks
@@ -40,7 +46,7 @@ find_library(TINYXML_LIBRARY_DEBUG
   $ENV{TINYXMLDIR})
 
 find_library(TINYXML_LIBRARY_RELEASE
-  tinyxml
+  tinyxml${FIND_LIB_SUFFIX}
   PATH_SUFFIXES lib64 lib
   PATHS
   ~/Library/Frameworks

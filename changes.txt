@@ -1,3 +1,9 @@
+Verison 0.11.0
+==============
+- Change EXTERNAL_CMAKE_DIR to PROJECT_NAME
++ Added zlib external project module
++ Added TmxParser external project module
+
 Verison 0.10.0
 ==============
 - Fix minor build order issue in Box2D and PROJECT_NAME dependency problems
