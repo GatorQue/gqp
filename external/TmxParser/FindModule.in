@@ -1,0 +1,20 @@
+# - Find @EXTERNAL_NAME@
+# Force the module to be found since it will be built later
+#
+#  @EXTERNAL_NAME@_INCLUDE_DIR - where to find module include files
+#  @EXTERNAL_NAME@_LIBRARIES - list of module libraries
+#  @EXTERNAL_NAME@_FOUND - Always true for this module
+#  @EXTERNAL_NAME@_LOCAL - True if using this Find@EXTERNAL_OPTION_DIR@.cmake module
+
+# Set our @EXTERNAL_OPTION_DIR@_INCLUDE_DIR value
+set(@EXTERNAL_NAME@_INCLUDE_DIR @FIND_INCLUDE_DIR@)
+
+# Set our @EXTERNAL_OPTION_DIR@_LIBRARIES value
+set(@EXTERNAL_NAME@_LIBRARIES @FIND_LIBRARIES@)
+
+# Set our @EXTERNAL_OPTION_DIR@_FOUND value
+set(@EXTERNAL_NAME@_FOUND TRUE)
+
+# Set our @EXTERNAL_OPTION_DIR@_LOCAL value
+set(@EXTERNAL_NAME@_LOCAL TRUE)
+
