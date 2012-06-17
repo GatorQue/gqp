@@ -1,4 +1,8 @@
-Verison 0.11.0
+Version 0.11.1
+==============
+- Fix zlib1.dll copy issue
+
+Version 0.11.0
 ==============
 - Change EXTERNAL_CMAKE_DIR to PROJECT_NAME
 + Added zlib external project module
