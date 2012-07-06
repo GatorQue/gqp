@@ -299,7 +299,8 @@ void GameState::UpdateVariable(float theElapsedTime)
 #if (SFML_VERSION_MAJOR < 2)
   mCursor.SetPosition(mApp.mInput.GetMouseX()-32.0f, mApp.mInput.GetMouseY()-25.25f);
 #else
-  mCursor.setPosition(sf::Mouse::getPosition().x-32.0f, sf::Mouse::getPosition().y-25.25f);
+  mCursor.setPosition(sf::Mouse::getPosition(mApp.mWindow).x-32.0f,
+    sf::Mouse::getPosition(mApp.mWindow).y-25.25f);
 #endif
 }
 
