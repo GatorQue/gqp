@@ -1,0 +1,187 @@
+# Filename: CMakeLists.txt
+# Description: CMake top level project file for building this external library.
+# Modification Log:
+# 2012-05-25 Initial version
+#
+
+# We require no less than version 2.8 for CMake
+cmake_minimum_required(VERSION 2.8)
+
+# Set our project name as TopLevel
+project(TinyXML)
+
+# Set default build type first before calling project() instruction
+if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build (Debug or Release)" FORCE)
+endif(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+
+# Include the top level macros to be used by all projects
+#include(${PROJECT_SOURCE_DIR}/cmake/Macros.cmake)
+
+# Include the top level functions to be used by all projects
+#include(${PROJECT_SOURCE_DIR}/cmake/Functions.cmake)
+
+# Include the top level options to be used by all projects
+#include(${PROJECT_SOURCE_DIR}/cmake/Options.cmake)
+
+# Add the external/3rd party directory first
+#add_subdirectory(external)
+
+# Add the projects folder next
+#add_subdirectory(projects)
+
+# Set target name
+set(target TmxParser)
+
+# Set target version information
+set(${target}_VERSION_MAJOR 1)
+set(${target}_VERSION_MINOR 0)
+set(${target}_VERSION_PATCH 0)
+
+# public header include file
+set(MAIN_HEADER Tmx.h)
+
+# TmxParser include files
+set(INC
+    TmxImage.h
+    TmxLayer.h
+    TmxMap.h
+    TmxMapTile.h
+    TmxObject.h
+    TmxObjectGroup.h
+    TmxPoint.h
+    TmxPolygon.h
+    TmxPolyline.h
+    TmxPropertySet.h
+    TmxTile.h
+    TmxTileset.h
+    TmxUtil.h
+    base64/base64.h)
+
+
+# TmxParser source files
+set(SRC
+    TmxImage.cpp
+    TmxLayer.cpp
+    TmxMap.cpp
+    TmxObject.cpp
+    TmxObjectGroup.cpp
+    TmxPolygon.cpp
+    TmxPolyline.cpp
+    TmxPropertySet.cpp
+    TmxTile.cpp
+    TmxTileset.cpp
+    TmxUtil.cpp
+    base64/base64.cpp)
+
+# Loop through external libraries dependencies and Find each of them
+set(LIBS)
+foreach(EXTERNAL_DEP ${TMXPARSER_DEPS})
+  # Get the uppercase version of the subdirectory name
+  string(TOUPPER ${EXTERNAL_DEP} EXTERNAL_NAME)
+
+  # Try to find this external dependency package
+  find_package(${EXTERNAL_DEP} REQUIRED COMPONENTS ${${EXTERNAL_NAME}_COMPONENTS})
+
+  # Add the include directories to our list of include directories
+  include_directories(${${EXTERNAL_NAME}_INCLUDE_DIR})
+
+  # Add the definitions to our list of definitions
+  if(${EXTERNAL_NAME}_DEFS)
+    add_definitions(${${EXTERNAL_NAME}_DEFS})
+  endif(${EXTERNAL_NAME}_DEFS)
+
+  # Add the libraries listed for this dependency
+  set(LIBS ${LIBS} ${${EXTERNAL_NAME}_LIBRARIES})
+
+  # Look for dependencies to this external dependency
+  foreach(SUBEXTERNAL_DEP ${${EXTERNAL_NAME}_DEPS})
+    # Get the uppercase version of the subdirectory name
+    string(TOUPPER ${SUBEXTERNAL_DEP} SUBEXTERNAL_NAME)
+
+    # Try to find this external dependency package
+    find_package(${SUBEXTERNAL_DEP} REQUIRED COMPONENTS ${${SUBEXTERNAL_NAME}_COMPONENTS})
+
+    # Add the include directories to our list of include directories
+    include_directories(${${SUBEXTERNAL_NAME}_INCLUDE_DIR})
+
+    # Add the definitions to our list of definitions
+    if(${SUBEXTERNAL_NAME}_DEFS)
+      add_definitions(${${SUBEXTERNAL_NAME}_DEFS})
+    endif(${SUBEXTERNAL_NAME}_DEFS)
+
+    # Add the libraries listed for this dependency
+    set(LIBS ${LIBS} ${${SUBEXTERNAL_NAME}_LIBRARIES})
+
+    # Loop through each component and get the libraries
+    foreach(COMPONENT_NAME ${${SUBEXTERNAL_NAME}_COMPONENTS})
+      # Build a list of libraries to link against for this project
+      set(LIBS ${LIBS} ${${SUBEXTERNAL_NAME}_${COMPONENT_NAME}_LIBRARY})
+    endforeach(COMPONENT_NAME ${${SUBEXTERNAL_NAME}_COMPONENTS})
+  endforeach()
+
+  # Loop through each component and get the libraries
+  foreach(COMPONENT_NAME ${${EXTERNAL_NAME}_COMPONENTS})
+    # Add our original depency libraries to the list
+    set(LIBS ${LIBS} ${${EXTERNAL_NAME}_${COMPONENT_NAME}_LIBRARY})
+  endforeach(COMPONENT_NAME ${${EXTERNAL_NAME}_COMPONENTS})
+endforeach()
+
+# Add the TmxParser library
+add_library(${target} ${MAIN_HEADER} ${INC} ${SRC})
+
+# Adjust the output file prefix/suffix to match our conventions
+if(BUILD_SHARED_LIBS)
+  if(WINDOWS)
+    # Include the major version number in Windows shared library names
+    # (but not import library names)
+    set_target_properties(${target} PROPERTIES DEBUG_POSTFIX -d)
+    set_target_properties(${target} PROPERTIES SUFFIX
+        "-${${target}_VERSION_MAJOR}_${${target}_VERSION_MINOR}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+  else(WINDOWS)
+    set_target_properties(${target} PROPERTIES DEBUG_POSTFIX -d)
+  endif(WINDOWS)
+  if(WINDOWS AND COMPILER_GCC)
+    # On Windows/gcc get rid of "lib" prefix for shared libraries,
+    # and transform the ".dll.a" suffix into ".a" for import libraries
+    set_target_properties(${target} PROPERTIES PREFIX "")
+    set_target_properties(${target} PROPERTIES IMPORT_SUFFIX ".a")
+  endif(WINDOWS AND COMPILER_GCC)
+else(BUILD_SHARED_LIBS)
+  set_target_properties(${target} PROPERTIES DEBUG_POSTFIX -s-d)
+  set_target_properties(${target} PROPERTIES RELEASE_POSTFIX -s)
+endif(BUILD_SHARED_LIBS)
+
+# Set target public header file for this library
+set_target_properties(${target} PROPERTIES PUBLIC_HEADER "${MAIN_HEADER}")
+
+# Set target version properties for this library
+set_target_properties(${target} PROPERTIES SOVERSION ${${target}_VERSION_MAJOR}.${${target}_VERSION_MINOR})
+set_target_properties(${target} PROPERTIES VERSION ${${target}_VERSION_MAJOR}.${${target}_VERSION_MINOR})
+  
+# for gcc 4.x on Windows, apply the BUILD_STATIC_STD_LIBS option if it is enabled
+if(WINDOWS AND COMPILER_GCC AND BUILD_STATIC_STD_LIBS)
+  if(${GCC_VERSION} MATCHES "4\\..*")
+    set_target_properties(${target} PROPERTIES LINK_FLAGS "-static-libgcc -static-libstdc++")
+  endif(${GCC_VERSION} MATCHES "4\\..*")
+endif(WINDOWS AND COMPILER_GCC AND BUILD_STATIC_STD_LIBS)
+
+# Add the external libraries to link against this target
+target_link_libraries(${target} ${LIBS})
+
+# add the install rule for this library
+install(TARGETS ${target}
+        PUBLIC_HEADER DESTINATION include/${target} COMPONENT devel
+        RUNTIME DESTINATION bin COMPONENT bin
+        LIBRARY DESTINATION lib COMPONENT shlib
+        ARCHIVE DESTINATION lib COMPONENT devel)
+
+# add the install rule for the include files for this library
+install(FILES ${INC}
+        DESTINATION include/${target}
+        COMPONENT devel)
+
+# add the install rule for the documentation
+#install(DIRECTORY ${PROJECT_SOURCE_DIR}/docs/
+#        DESTINATION doc
+#        COMPONENT devel)

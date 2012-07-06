@@ -1,0 +1,64 @@
+Welcome to the project Skeleton readme file.  If you follow these simple steps
+you will be quickly on your way to compiling your project files against the
+3rd party/external libraries you have selected.
+
+Step 1: Select the 3rd party/external libraries you need
+From the GatorQue Project Google Code project page, download and extract each
+3rd party/external library you wish to use for your project in the 3rdparty
+folder.
+
+Step 2: Copy this folder and rename it to the name of your project (avoid
+spaces in the name if possible).
+
+Step 3: Open up the Options.cmake file in this new folder and adjust the
+project settings to your liking. Don't forget to enable the project to be
+built! This includes specifying the 3rd party/external libraries you need and
+their find_package modules you require. The name of the dependencies is the
+same name as the folder found in the 3rdparty folder (except all in caps).
+
+Step 4: Drop your source files into the projects src folder to be built. The
+GatorQue project will automatically find all files that end with .CXX, .CPP,
+and .C. The .HXX, .HPP, .H files will be found by the compiler when you build
+the project.
+
+Step 5: Drop your resource files into the resources folder to be built. The
+GatorQue project will copy this folder to the build directory after the source
+files have been built as a subdirectory in your build directory called
+resources.
+
+Step 6: Perform the following steps to create a build environment for you to
+build everything.
+
+Step 6A: Visual Studio example:
+If using Visual Studio open a Visual Studios Command Prompt and type the following:
+cd <path-to-GatorQue-Projects-folder>
+mkdir build
+cd build
+cmake ..
+
+Now open the solutions file produced and compile your code as usual.
+
+Step 6B: CodeBlocks example:
+Open a command prompt and type the following:
+cd <path-to-GatorQue-Projects-folder>
+mkdir build
+cd build
+cmake -G "CodeBlocks - MinGW Makefiles" ..
+
+Now open the CodeBlocks project file produced and compile your code as usual.
+
+Step 6C: Linux/MacOSX example:
+Open a terminal window and type the following:
+cd <path-to-GatorQue-Projects-folder>
+mkdir build
+cd build
+cmake ..
+make
+
+Step 7: After the build completes you will have a new folder called external
+created in the GatorQue Project folder. This folder contains all the 3rd party/
+external library files you might want/need. This includes the binary DLL files,
+the library files, the 3rd party/external examples built, and the 3rd party/
+external documentation. You should also have a new folder called doc created in
+the GatorQue Project folder. This folder will contain the Doxygen files
+produced for each of your projects.
