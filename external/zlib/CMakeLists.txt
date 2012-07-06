@@ -60,41 +60,52 @@ set(COPY_ZLIB_CMAKE
   -E copy
   ${PROJECT_SOURCE_DIR}/Findzlib.cmake
   ${EXTERNAL_MODULES_DIR})
-if(WINDOWS)
+if(ZLIB_BUILD_EXAMPLES)
+  if(WINDOWS)
+    set(COPY_ZLIB_EXAMPLE1
+      -E copy
+      ${PROJECT_BINARY_DIR}/clone/example-zlib.exe
+      ${EXTERNAL_EXAMPLES_DIR}/${PROJECT_NAME})
+    set(COPY_ZLIB_EXAMPLE2
+      -E copy
+      ${PROJECT_BINARY_DIR}/clone/minigzip.exe
+      ${EXTERNAL_EXAMPLES_DIR}/${PROJECT_NAME})
+    set(COPY_ZLIB_EXAMPLE3
+      -E copy
+      ${PROJECT_BINARY_DIR}/clone/example64-zlib.exe
+      ${EXTERNAL_EXAMPLES_DIR}/${PROJECT_NAME})
+    set(COPY_ZLIB_EXAMPLE4
+      -E copy
+      ${PROJECT_BINARY_DIR}/clone/minigzip64.exe
+      ${EXTERNAL_EXAMPLES_DIR}/${PROJECT_NAME})
+  else(WINDOWS)
+    set(COPY_ZLIB_EXAMPLE1
+      -E copy
+      ${PROJECT_BINARY_DIR}/clone/example-zlib
+      ${EXTERNAL_EXAMPLES_DIR}/${PROJECT_NAME})
+    set(COPY_ZLIB_EXAMPLE2
+      -E copy
+      ${PROJECT_BINARY_DIR}/clone/minigzip
+      ${EXTERNAL_EXAMPLES_DIR}/${PROJECT_NAME})
+    set(COPY_ZLIB_EXAMPLE3
+      -E copy
+      ${PROJECT_BINARY_DIR}/clone/example64-zlib
+      ${EXTERNAL_EXAMPLES_DIR}/${PROJECT_NAME})
+    set(COPY_ZLIB_EXAMPLE4
+      -E copy
+      ${PROJECT_BINARY_DIR}/clone/minigzip64
+      ${EXTERNAL_EXAMPLES_DIR}/${PROJECT_NAME})
+  endif(WINDOWS)
+else(ZLIB_BUILD_EXAMPLES)
   set(COPY_ZLIB_EXAMPLE1
-    -E copy
-    ${PROJECT_BINARY_DIR}/clone/example-zlib.exe
-    ${EXTERNAL_EXAMPLES_DIR}/${PROJECT_NAME})
+    -E make_directory ${EXTERNAL_EXAMPLES_DIR}/${PROJECT_NAME})
   set(COPY_ZLIB_EXAMPLE2
-    -E copy
-    ${PROJECT_BINARY_DIR}/clone/minigzip.exe
-    ${EXTERNAL_EXAMPLES_DIR}/${PROJECT_NAME})
+    -E make_directory ${EXTERNAL_EXAMPLES_DIR}/${PROJECT_NAME})
   set(COPY_ZLIB_EXAMPLE3
-    -E copy
-    ${PROJECT_BINARY_DIR}/clone/example64-zlib.exe
-    ${EXTERNAL_EXAMPLES_DIR}/${PROJECT_NAME})
+    -E make_directory ${EXTERNAL_EXAMPLES_DIR}/${PROJECT_NAME})
   set(COPY_ZLIB_EXAMPLE4
-    -E copy
-    ${PROJECT_BINARY_DIR}/clone/minigzip64.exe
-    ${EXTERNAL_EXAMPLES_DIR}/${PROJECT_NAME})
-else(WINDOWS)
-  set(COPY_ZLIB_EXAMPLE1
-    -E copy
-    ${PROJECT_BINARY_DIR}/clone/example-zlib
-    ${EXTERNAL_EXAMPLES_DIR}/${PROJECT_NAME})
-  set(COPY_ZLIB_EXAMPLE2
-    -E copy
-    ${PROJECT_BINARY_DIR}/clone/minigzip
-    ${EXTERNAL_EXAMPLES_DIR}/${PROJECT_NAME})
-  set(COPY_ZLIB_EXAMPLE3
-    -E copy
-    ${PROJECT_BINARY_DIR}/clone/example64-zlib
-    ${EXTERNAL_EXAMPLES_DIR}/${PROJECT_NAME})
-  set(COPY_ZLIB_EXAMPLE4
-    -E copy
-    ${PROJECT_BINARY_DIR}/clone/minigzip64
-    ${EXTERNAL_EXAMPLES_DIR}/${PROJECT_NAME})
-endif(WINDOWS)
+    -E make_directory ${EXTERNAL_EXAMPLES_DIR}/${PROJECT_NAME})
+endif(ZLIB_BUILD_EXAMPLES)
 set(COPY_ZLIB_LICENSE
   -E copy
   ${TOPLEVEL_DIR}/${PROJECT_NAME}/README
