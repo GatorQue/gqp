@@ -25,7 +25,7 @@ find_path(TMXPARSER_INCLUDE_DIR TmxParser/Tmx.h
   $ENV{TMXPARSERDIR})
 
 find_library(TMXPARSER_LIBRARY_DEBUG
-  TmxParser-d
+  NAMES TmxParser-d TmxParser-d-s
   PATH_SUFFIXES lib64 lib
   PATHS
   ~/Library/Frameworks
@@ -40,7 +40,7 @@ find_library(TMXPARSER_LIBRARY_DEBUG
   $ENV{TMXPARSERDIR})
 
 find_library(TMXPARSER_LIBRARY_RELEASE
-  TmxParser
+  NAMES TmxParser TmxParser-s
   PATH_SUFFIXES lib64 lib
   PATHS
   ~/Library/Frameworks

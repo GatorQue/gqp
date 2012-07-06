@@ -42,15 +42,28 @@ add_subdirectory(${TOPLEVEL_DIR}/${PROJECT_NAME}/Box2D
 
 # Step 3a: Define which directories to copy to EXTERNAL_DIR and its folders
 if(BOX2D_BUILD_SHARED)
-  set(COPY_BOX2D_BIN
-    -E copy
-    ${PROJECT_BINARY_DIR}/install/Box2D.dll
-    ${EXTERNAL_BIN_DIR})
-  if(BOX2D_BUILD_EXAMPLES)
-    set(COPY_BOX2D_LIB
+  if(WINDOWS)
+    set(COPY_BOX2D_BIN
       -E copy
-      ${PROJECT_BINARY_DIR}/install/Box2D.lib
-      ${EXTERNAL_LIB_DIR})
+      ${PROJECT_BINARY_DIR}/install/Box2D.dll
+      ${EXTERNAL_BIN_DIR})
+  else(WINDOWS)
+    set(COPY_BOX2D_BIN
+      -E make_directory
+      ${EXTERNAL_BIN_DIR})
+  endif(WINDOWS)
+  if(BOX2D_BUILD_EXAMPLES)
+    if(COMPILER_GCC)
+      set(COPY_BOX2D_LIB
+        -E copy
+        ${PROJECT_BINARY_DIR}/install/libBox2D.a
+        ${EXTERNAL_LIB_DIR})
+    else(COMPILER_GCC)
+      set(COPY_BOX2D_LIB
+        -E copy
+        ${PROJECT_BINARY_DIR}/install/Box2D.lib
+        ${EXTERNAL_LIB_DIR})
+    endif(COMPILER_GCC)
   else(BOX2D_BUILD_EXAMPLES)
     set(COPY_BOX2D_LIB
       -E make_directory
@@ -60,10 +73,17 @@ else(BOX2D_BUILD_SHARED)
   set(COPY_BOX2D_BIN
     -E make_directory
     ${EXTERNAL_BIN_DIR})
-  set(COPY_BOX2D_LIB
-    -E copy
-    ${PROJECT_BINARY_DIR}/install/Box2D.lib
-    ${EXTERNAL_LIB_DIR})
+  if(COMPILER_GCC)
+    set(COPY_BOX2D_LIB
+      -E copy
+      ${PROJECT_BINARY_DIR}/install/libBox2D.a
+      ${EXTERNAL_LIB_DIR})
+  else(COMPILER_GCC)
+    set(COPY_BOX2D_LIB
+      -E copy
+      ${PROJECT_BINARY_DIR}/install/Box2D.lib
+      ${EXTERNAL_LIB_DIR})
+  endif(COMPILER_GCC)
 endif(BOX2D_BUILD_SHARED)
 set(COPY_BOX2D_INCLUDE
   -E copy_directory
