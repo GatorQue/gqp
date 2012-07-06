@@ -107,6 +107,7 @@ if(SFML_ENABLED)
 
   # Define where this module can find the precompiled libraries
   set(SFMLDIR ${EXTERNAL_DIR})
+  set(SFML_ROOT ${EXTERNAL_DIR})
 
   # Specify the binary directory to copy as a post_build step
   set(SFML_BIN_DIR
