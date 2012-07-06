@@ -37,7 +37,7 @@ class GameState : public GQE::IState
     virtual void DoInit(void);
 
     /**
-     * ReInit is responsible for Reseting this state when the
+     * ReInit is responsible for Reseting this state when the 
      * StateManager::ResetActiveState() method is called.  This way a Game
      * State can be restarted without unloading and reloading the game assets
      */
@@ -71,7 +71,7 @@ class GameState : public GQE::IState
 
   protected:
     /**
-     * Cleanup is responsible for performing any cleanup required before
+     * HandleCleanup is responsible for performing any cleanup required before
      * this State is removed.
      */
     virtual void HandleCleanup(void);
