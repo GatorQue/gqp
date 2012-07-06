@@ -1,3 +1,11 @@
+Version 0.11.3
+==============
+- Fix 3rd party prebuilt library issues
+
+Version 0.11.2
+==============
+- Fix Example project issues
+
 Version 0.11.1
 ==============
 - Fix zlib1.dll copy issue
