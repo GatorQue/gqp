@@ -34,57 +34,17 @@ set(OLD_CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
 set(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/install)
 set(BOX2D_INSTALL ON CACHE BOOL "Install Box2D" FORCE)
 set(BOX2D_INSTALL_DOC ${BOX2D_BUILD_DOCS} CACHE BOOL "Install Documenation" FORCE)
-set(LIB_INSTALL_DIR ${PROJECT_BINARY_DIR}/install)
+set(LIB_INSTALL_DIR ${PROJECT_BINARY_DIR}/install/lib)
 
 # Step 2b: Add the clone directory to be built
 add_subdirectory(${TOPLEVEL_DIR}/${PROJECT_NAME}/Box2D
   ${PROJECT_BINARY_DIR}/clone)
 
 # Step 3a: Define which directories to copy to EXTERNAL_DIR and its folders
-if(BOX2D_BUILD_SHARED)
-  if(WINDOWS)
-    set(COPY_BOX2D_BIN
-      -E copy
-      ${PROJECT_BINARY_DIR}/install/Box2D.dll
-      ${EXTERNAL_BIN_DIR})
-  else(WINDOWS)
-    set(COPY_BOX2D_BIN
-      -E make_directory
-      ${EXTERNAL_BIN_DIR})
-  endif(WINDOWS)
-  if(BOX2D_BUILD_EXAMPLES)
-    if(COMPILER_GCC)
-      set(COPY_BOX2D_LIB
-        -E copy
-        ${PROJECT_BINARY_DIR}/install/libBox2D.a
-        ${EXTERNAL_LIB_DIR})
-    else(COMPILER_GCC)
-      set(COPY_BOX2D_LIB
-        -E copy
-        ${PROJECT_BINARY_DIR}/install/Box2D.lib
-        ${EXTERNAL_LIB_DIR})
-    endif(COMPILER_GCC)
-  else(BOX2D_BUILD_EXAMPLES)
-    set(COPY_BOX2D_LIB
-      -E make_directory
-      ${EXTERNAL_LIB_DIR})
-  endif(BOX2D_BUILD_EXAMPLES)
-else(BOX2D_BUILD_SHARED)
-  set(COPY_BOX2D_BIN
-    -E make_directory
-    ${EXTERNAL_BIN_DIR})
-  if(COMPILER_GCC)
-    set(COPY_BOX2D_LIB
-      -E copy
-      ${PROJECT_BINARY_DIR}/install/libBox2D.a
-      ${EXTERNAL_LIB_DIR})
-  else(COMPILER_GCC)
-    set(COPY_BOX2D_LIB
-      -E copy
-      ${PROJECT_BINARY_DIR}/install/Box2D.lib
-      ${EXTERNAL_LIB_DIR})
-  endif(COMPILER_GCC)
-endif(BOX2D_BUILD_SHARED)
+set(COPY_BOX2D_LIB
+  -E copy_directory
+  ${PROJECT_BINARY_DIR}/install/lib
+  ${EXTERNAL_LIB_DIR})
 set(COPY_BOX2D_INCLUDE
   -E copy_directory
   ${PROJECT_BINARY_DIR}/install/include
@@ -138,7 +98,6 @@ add_custom_command(
   COMMAND ${CMAKE_COMMAND} -E make_directory ${EXTERNAL_LIB_DIR}
   COMMAND ${CMAKE_COMMAND} -E make_directory ${EXTERNAL_EXAMPLES_DIR}/${PROJECT_NAME}
   COMMAND ${CMAKE_COMMAND} -E make_directory ${EXTERNAL_MODULES_DIR}
-  COMMAND ${CMAKE_COMMAND} ${COPY_BOX2D_BIN}
   COMMAND ${CMAKE_COMMAND} ${COPY_BOX2D_LIB}
   COMMAND ${CMAKE_COMMAND} ${COPY_BOX2D_INCLUDE}
   COMMAND ${CMAKE_COMMAND} ${COPY_BOX2D_DOC1}
@@ -155,6 +114,7 @@ add_custom_command(
 if(BOX2D_BUILD_DOCS AND DOXYGEN_FOUND)
   set(PROJECT_DOC_DIR ${TOPLEVEL_DIR}/${PROJECT_NAME}/Box2D)
   add_subdirectory(doc)
+  add_dependencies(INSTALL-${PROJECT_NAME} doc-${PROJECT_NAME})
 endif(BOX2D_BUILD_DOCS AND DOXYGEN_FOUND)
 
 # Step 3e: Add each library provided by this module as a dependency

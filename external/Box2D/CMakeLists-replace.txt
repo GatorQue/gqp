@@ -205,6 +205,6 @@ if(BOX2D_INSTALL)
 	endif()
 
 	# install build system hooks for third-party apps
-	install(EXPORT Box2D-targets DESTINATION ${LIB_INSTALL_DIR}/Box2D)
-	install(FILES Box2DConfig.cmake DESTINATION ${LIB_INSTALL_DIR}/Box2D)
+	install(EXPORT Box2D-targets DESTINATION cmake/Box2D)
+	install(FILES Box2DConfig.cmake DESTINATION cmake/Box2D)
 endif(BOX2D_INSTALL)

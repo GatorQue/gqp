@@ -104,6 +104,7 @@ add_custom_command(
 if(TMXPARSER_BUILD_DOCS AND DOXYGEN_FOUND)
   set(PROJECT_DOC_DIR ${TOPLEVEL_DIR}/${PROJECT_NAME}/TmxParser)
   add_subdirectory(doc)
+  add_dependencies(INSTALL-${PROJECT_NAME} doc-${PROJECT_NAME})
 endif(TMXPARSER_BUILD_DOCS AND DOXYGEN_FOUND)
 
 # Step 3e: Add each library provided by this module as a dependency
