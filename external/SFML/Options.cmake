@@ -59,6 +59,7 @@ if(SFML_SHARED_LIBRARIES)
   set(SFML_DEFS -DSFML_DYNAMIC)
 else(SFML_SHARED_LIBRARIES)
   set(SFML_DEFS -DSFML_STATIC)
+  set(SFML_STATIC_LIBRARIES TRUE)
 endif(SFML_SHARED_LIBRARIES)
 # Push the list to the parent scope for projects to reference
 set(SFML_DEFS ${SFML_DEFS} PARENT_SCOPE)

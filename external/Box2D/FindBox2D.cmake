@@ -25,7 +25,7 @@ find_path(BOX2D_INCLUDE_DIR Box2D/Box2D.h
   $ENV{BOX2DDIR})
 
 find_library(BOX2D_LIBRARY_DEBUG
-  Box2D-d
+  NAMES Box2D-d Box2D-s-d
   PATH_SUFFIXES lib64 lib
   PATHS
   ~/Library/Frameworks
@@ -40,7 +40,7 @@ find_library(BOX2D_LIBRARY_DEBUG
   $ENV{BOX2DDIR})
 
 find_library(BOX2D_LIBRARY_RELEASE
-  Box2D
+  NAMES Box2D Box2D-s
   PATH_SUFFIXES lib64 lib
   PATHS
   ~/Library/Frameworks
