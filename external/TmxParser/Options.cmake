@@ -58,7 +58,7 @@ if(TMXPARSER_ENABLED)
 
   # Define the include directory to reference for this external module
   set(FIND_INCLUDE_DIR
-    ${TOPLEVEL_DIR}/${EXTERNAL_OPTION_DIR}/TmxParser)
+    ${TOPLEVEL_DIR}/${EXTERNAL_OPTION_DIR})
 
   # Create the Find.cmake module for this external module
   configure_file(${PROJECT_SOURCE_DIR}/${EXTERNAL_OPTION_DIR}/FindModule.in
