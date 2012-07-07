@@ -10,7 +10,6 @@
 set_option(ZLIB_ENABLED TRUE BOOL "Build 'zlib' 3rdparty/external libraries?")
 set_option(ZLIB_SHARED_LIBRARIES FALSE BOOL "Build 'zlib' shared libraries?")
 set_option(ZLIB_BUILD_DOCS FALSE BOOL "Build 'zlib' documentation?")
-# ZLIB doesn't provide examples
 set_option(ZLIB_BUILD_EXAMPLES FALSE BOOL "Build 'zlib' examples?")
 
 # Determine which URL to use to obtain the ZLIB source files
@@ -23,11 +22,7 @@ set_option(ZLIB_URL
 set(ZLIB_EXAMPLES example-zlib minigzip example64-zlib minigzip64)
 
 # Create a list of libraries provided by this 3rd party/external module
-if(ZLIB_SHARED_LIBRARIES)
-  set(ZLIB_LIBS zlib)
-else(ZLIB_SHARED_LIBRARIES)
-  set(ZLIB_LIBS zlibstatic)
-endif(ZLIB_SHARED_LIBRARIES)
+set(ZLIB_LIBS zlib)
 # Push the list to the parent scope for projects to reference
 set(ZLIB_LIBS ${ZLIB_LIBS} PARENT_SCOPE)
 
@@ -56,11 +51,7 @@ if(ZLIB_ENABLED)
   # Define the libraries produced by this external module
 
   # Define the global list of libraries produced by this external module
-if(ZLIB_SHARED_LIBRARIES)
   set(FIND_LIBRARIES zlib)
-else(ZLIB_SHARED_LIBRARIES)
-  set(FIND_LIBRARIES zlibstatic)
-endif(ZLIB_SHARED_LIBRARIES)
 
   # Define the include directory to reference for this external module
   set(FIND_INCLUDE_DIR
