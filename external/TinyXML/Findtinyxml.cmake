@@ -10,12 +10,6 @@ if(TINYXML_INCLUDE_DIR)
   set(TINYXML_FIND_QUIETLY TRUE)
 endif(TINYXML_INCLUDE_DIR)
 
-# deduce the libraries suffix from the options
-set(FIND_LIB_SUFFIX "")
-if(NOT BUILD_SHARED_LIBRARIES)
-  set(FIND_LIB_SUFFIX "${FIND_LIB_SUFFIX}-s")
-endif()
-
 find_path(TINYXML_INCLUDE_DIR tinyxml.h
   PATH_SUFFIXES tinyxml
   PATHS
@@ -31,7 +25,7 @@ find_path(TINYXML_INCLUDE_DIR tinyxml.h
   $ENV{TINYXMLDIR}/include)
 
 find_library(TINYXML_LIBRARY_DEBUG
-  tinyxml-d${FIND_LIB_SUFFIX}
+  NAMES tinyxml-d tinyxml-s-d
   PATH_SUFFIXES lib64 lib
   PATHS
   ~/Library/Frameworks
@@ -46,7 +40,7 @@ find_library(TINYXML_LIBRARY_DEBUG
   $ENV{TINYXMLDIR})
 
 find_library(TINYXML_LIBRARY_RELEASE
-  tinyxml${FIND_LIB_SUFFIX}
+  NAMES tinyxml tinyxml-s
   PATH_SUFFIXES lib64 lib
   PATHS
   ~/Library/Frameworks
@@ -66,7 +60,9 @@ if(TINYXML_LIBRARY_DEBUG OR TINYXML_LIBRARY_RELEASE)
 
   # If both were found, set TINYXML_LIBRARY to the release version
   if(TINYXML_LIBRARY_DEBUG AND TINYXML_LIBRARY_RELEASE)
-    set(TINYXML_LIBRARY ${TINYXML_LIBRARY_RELEASE})
+    # This causes problems with building under NMake Makefiles (command line Visual Studio)
+    set(TINYXML_LIBRARY debug ${TINYXML_LIBRARY_DEBUG}
+        optimized ${TINYXML_LIBRARY_RELEASE})
   endif()
 
   if(TINYXML_LIBRARY_DEBUG AND NOT TINYXML_LIBRARY_RELEASE)

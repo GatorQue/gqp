@@ -60,7 +60,9 @@ if(ZLIB_LIBRARY_DEBUG OR ZLIB_LIBRARY_RELEASE)
 
   # If both were found, set ZLIB_LIBRARY to the release version
   if(ZLIB_LIBRARY_DEBUG AND ZLIB_LIBRARY_RELEASE)
-    set(ZLIB_LIBRARY ${ZLIB_LIBRARY_RELEASE})
+    # This causes problems with building under NMake Makefiles (command line Visual Studio)
+    set(ZLIB_LIBRARY debug ${ZLIB_LIBRARY_DEBUG}
+      optimized ${ZLIB_LIBRARY_RELEASE})
   endif()
 
   if(ZLIB_LIBRARY_DEBUG AND NOT ZLIB_LIBRARY_RELEASE)
