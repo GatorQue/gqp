@@ -102,9 +102,8 @@ add_custom_command(
 
 # Step 3d: Build documentation now if enabled and Doxygen was found
 if(TMXPARSER_BUILD_DOCS AND DOXYGEN_FOUND)
-  # TODO: Add documentation CMake files
-  #set(PROJECT_DOC_DIR ${TOPLEVEL_DIR}/${PROJECT_NAME}/TmxParser)
-  #add_subdirectory(doc)
+  set(PROJECT_DOC_DIR ${TOPLEVEL_DIR}/${PROJECT_NAME}/TmxParser)
+  add_subdirectory(doc)
 endif(TMXPARSER_BUILD_DOCS AND DOXYGEN_FOUND)
 
 # Step 3e: Add each library provided by this module as a dependency
