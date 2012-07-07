@@ -7,7 +7,7 @@
 
 # Box2D library options
 set_option(BOX2D_ENABLED TRUE BOOL "Build 'Box2D' 3rdparty/external libraries?")
-set_option(BOX2D_SHARED_LIBRARIES FALSE BOOL "Build 'Box2D' shared libraries?")
+set_option(BOX2D_SHARED_LIBRARIES TRUE BOOL "Build 'Box2D' shared libraries?")
 set_option(BOX2D_REVISION_TAG "" STRING "Which 'Box2D' revision/tag to use?")
 set_option(BOX2D_BUILD_DOCS FALSE BOOL "Build 'Box2D' documentation?")
 set_option(BOX2D_BUILD_EXAMPLES FALSE BOOL "Build 'Box2D' examples?")
