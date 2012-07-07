@@ -31,6 +31,7 @@ if(GQE_SHARED_LIBRARIES)
   set(GQE_DEFS -DGQE_DYNAMIC)
 else(GQE_SHARED_LIBRARIES)
   set(GQE_DEFS -DGQE_STATIC)
+  set(GQE_STATIC_LIBRARIES TRUE)
 endif(GQE_SHARED_LIBRARIES)
 # Push the list to the parent scope for projects to reference
 set(GQE_DEFS ${GQE_DEFS} PARENT_SCOPE)
