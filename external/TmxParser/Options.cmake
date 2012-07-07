@@ -47,7 +47,7 @@ set(TMXPARSER_DEPS ${TMXPARSER_DEPS} PARENT_SCOPE)
 # Create a list of external library dependencies used by this external library
 set(TMXPARSER_LIB_DEPS
   TINYXML tinyxml
-  ZLIB    zlibstatic)
+  ZLIB    zlib)
 # Push the list to the parent scope for projects to reference
 set(TMXPARSER_LIB_DEPS ${TMXPARSER_LIB_DEPS} PARENT_SCOPE)
 
