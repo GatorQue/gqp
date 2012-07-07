@@ -57,12 +57,14 @@ set(SFML_COMPONENTS ${SFML_COMPONENTS} PARENT_SCOPE)
 # Create a list of definitions for projects to use
 if(SFML_SHARED_LIBRARIES)
   set(SFML_DEFS -DSFML_DYNAMIC)
+  set(SFML_STATIC_LIBRARIES FALSE)
 else(SFML_SHARED_LIBRARIES)
   set(SFML_DEFS -DSFML_STATIC)
   set(SFML_STATIC_LIBRARIES TRUE)
 endif(SFML_SHARED_LIBRARIES)
 # Push the list to the parent scope for projects to reference
 set(SFML_DEFS ${SFML_DEFS} PARENT_SCOPE)
+set(SFML_STATIC_LIBRARIES ${SFML_STATIC_LIBRARIES} PARENT_SCOPE)
 
 # Create a list of external dependencies used by this external library
 set(SFML_DEPS)

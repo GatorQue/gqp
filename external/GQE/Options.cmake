@@ -29,12 +29,14 @@ set(GQE_COMPONENTS ${GQE_COMPONENTS} PARENT_SCOPE)
 # Create a list of definitions for projects to use
 if(GQE_SHARED_LIBRARIES)
   set(GQE_DEFS -DGQE_DYNAMIC)
+  set(GQE_STATIC_LIBRARIES FALSE)
 else(GQE_SHARED_LIBRARIES)
   set(GQE_DEFS -DGQE_STATIC)
   set(GQE_STATIC_LIBRARIES TRUE)
 endif(GQE_SHARED_LIBRARIES)
 # Push the list to the parent scope for projects to reference
 set(GQE_DEFS ${GQE_DEFS} PARENT_SCOPE)
+set(GQE_STATIC_LIBRARIES ${GQE_STATIC_LIBRARIES} PARENT_SCOPE)
 
 # Create a list of example targets provided by this library
 set(GQE_EXAMPLES spacedots tictactoe)
