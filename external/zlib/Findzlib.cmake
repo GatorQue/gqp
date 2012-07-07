@@ -25,7 +25,7 @@ find_path(ZLIB_INCLUDE_DIR zlib.h
   $ENV{ZLIBDIR}/include)
 
 find_library(ZLIB_LIBRARY_DEBUG
-  NAMES zlib-d zlibstatic-d
+  NAMES zlib-d zlib-s-d
   PATH_SUFFIXES lib64 lib
   PATHS
   ~/Library/Frameworks
@@ -40,7 +40,7 @@ find_library(ZLIB_LIBRARY_DEBUG
   $ENV{ZLIBDIR})
 
 find_library(ZLIB_LIBRARY_RELEASE
-  NAMES zlib zlibstatic
+  NAMES zlib zlib-s
   PATH_SUFFIXES lib64 lib
   PATHS
   ~/Library/Frameworks
