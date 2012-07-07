@@ -25,7 +25,7 @@ find_path(TMXPARSER_INCLUDE_DIR TmxParser/Tmx.h
   $ENV{TMXPARSERDIR})
 
 find_library(TMXPARSER_LIBRARY_DEBUG
-  NAMES TmxParser-d TmxParser-d-s
+  NAMES TmxParser-d TmxParser-s-d
   PATH_SUFFIXES lib64 lib
   PATHS
   ~/Library/Frameworks
@@ -60,7 +60,9 @@ if(TMXPARSER_LIBRARY_DEBUG OR TMXPARSER_LIBRARY_RELEASE)
 
   # If both were found, set TMXPARSER_LIBRARY to the release version
   if(TMXPARSER_LIBRARY_DEBUG AND TMXPARSER_LIBRARY_RELEASE)
-    set(TMXPARSER_LIBRARY ${TMXPARSER_LIBRARY_RELEASE})
+    # This causes problems with building under NMake Makefiles (command line Visual Studio)
+    set(TMXPARSER_LIBRARY debug ${TMXPARSER_LIBRARY_DEBUG}
+      optimized ${TMXPARSER_LIBRARY_RELEASE})
   endif()
 
   if(TMXPARSER_LIBRARY_DEBUG AND NOT TMXPARSER_LIBRARY_RELEASE)
