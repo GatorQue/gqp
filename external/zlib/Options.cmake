@@ -8,7 +8,7 @@
 
 # ZLIB library options
 set_option(ZLIB_ENABLED TRUE BOOL "Build 'zlib' 3rdparty/external libraries?")
-set_option(ZLIB_SHARED_LIBRARIES FALSE BOOL "Build 'zlib' shared libraries?")
+set_option(ZLIB_SHARED_LIBRARIES TRUE BOOL "Build 'zlib' shared libraries?")
 set_option(ZLIB_BUILD_DOCS FALSE BOOL "Build 'zlib' documentation?")
 set_option(ZLIB_BUILD_EXAMPLES FALSE BOOL "Build 'zlib' examples?")
 
