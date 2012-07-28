@@ -40,7 +40,7 @@ set(TMXPARSER_DEFS)
 set(TMXPARSER_DEFS ${TMXPARSER_DEFS} PARENT_SCOPE)
 
 # Create a list of external dependencies used by this external library
-set(TMXPARSER_DEPS TINYXML ZLIB)
+set(TMXPARSER_DEPS TinyXML zlib)
 # Push the list to the parent scope for projects to reference
 set(TMXPARSER_DEPS ${TMXPARSER_DEPS} PARENT_SCOPE)
 
