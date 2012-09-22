@@ -8,6 +8,7 @@
 # Project options
 set_option(SKELETON_ENABLED FALSE BOOL "Build 'SKELETON' project?")
 set_option(SKELETON_BUILD_DOCS TRUE BOOL "Build 'SKELETON' documentation?")
+set_option(SKELETON_CONSOLE_ENABLED TRUE BOOL "Build 'SKELETON' as a console only executable?")
 
 # Define the external libraries this project depends on
 set(SKELETON_DEPS) #SFML THOR GQE ETC
