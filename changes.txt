@@ -1,3 +1,7 @@
+Version 0.13.0
+==============
+- Add better console only support to Example and Skeleton
+
 Version 0.12.0
 ==============
 - Final fixes for 3rdparty prebuilt libraries
