@@ -103,11 +103,11 @@ file(GLOB_RECURSE ${SUBPROJECT_NAME}_SOURCES
 if(${SUBPROJECT_NAME}_SOURCES)
 
   # Add a executable target to build the source files
-  if(WINDOWS)
+  if(WINDOWS AND NOT ${SUBPROJECT_NAME}_CONSOLE_ENABLED)
     add_executable(${PROJECT_NAME} WIN32 ${${SUBPROJECT_NAME}_SOURCES})
-  else(WINDOWS)
+  else(WINDOWS AND NOT ${SUBPROJECT_NAME}_CONSOLE_ENABLED)
     add_executable(${PROJECT_NAME} ${${SUBPROJECT_NAME}_SOURCES})
-  endif(WINDOWS)
+  endif(WINDOWS AND NOT ${SUBPROJECT_NAME}_CONSOLE_ENABLED)
 
   # Set the debug suffix
   set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX -d)
