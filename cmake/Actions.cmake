@@ -3,6 +3,7 @@
 #   download files from the internet.
 # Modification Log:
 # 2012-02-20 Initial version
+# 2012-10-26 Remove redundant creation of SVN destination directory
 #
 
 # Name: DownloadFile
@@ -340,7 +341,6 @@ function(CloneSubversion repository directory)
   if(NOT EXISTS "${directory}")
     message(STATUS "Cloning from '${repository}' to '${directory}'")
     execute_process(
-      COMMAND ${CMAKE_COMMAND} -E make_directory ${directory}
       COMMAND ${Subversion_SVN_EXECUTABLE} co ${repository} ${tag_arg} --non-interactive ${user_arg} ${password_arg} "${directory}"
       WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
       RESULT_VARIABLE error_code)

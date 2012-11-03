@@ -1,3 +1,7 @@
+Version 0.13.1
+==============
+- CMake 2.8.2 compatibility fixes
+
 Version 0.13.0
 ==============
 - Add better console only support to Example and Skeleton
