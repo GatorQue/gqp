@@ -25,7 +25,7 @@ if(SFML_USE_LATEST)
     ftp opengl pong shader sockets sound sound-capture voip win32 window)
 else(SFML_USE_LATEST)
   set_option(SFML_URL
-    "http://gqe.googlecode.com/files/SFML-1.6.4-cmake.zip"
+    "http://gqe.googlecode.com/files/SFML-1.6.5-cmake.zip"
     STRING
     "URL for getting older 'SFML' version")
 
