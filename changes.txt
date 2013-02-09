@@ -1,3 +1,7 @@
+Version 0.13.2
+==============
+- Bump SFML v1.6 from -4 to -5 to fix ephemeral ports
+
 Version 0.13.1
 ==============
 - CMake 2.8.2 compatibility fixes
