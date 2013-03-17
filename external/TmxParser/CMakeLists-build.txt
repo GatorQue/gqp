@@ -35,7 +35,7 @@ set(target TmxParser)
 
 # Set target version information
 set(${target}_VERSION_MAJOR 1)
-set(${target}_VERSION_MINOR 0)
+set(${target}_VERSION_MINOR 1)
 set(${target}_VERSION_PATCH 0)
 
 # public header include file
@@ -43,7 +43,9 @@ set(MAIN_HEADER Tmx.h)
 
 # TmxParser include files
 set(INC
+    TmxEllipse.h
     TmxImage.h
+    TmxImageLayer.h
     TmxLayer.h
     TmxMap.h
     TmxMapTile.h
@@ -61,7 +63,9 @@ set(INC
 
 # TmxParser source files
 set(SRC
+    TmxEllipse.cpp
     TmxImage.cpp
+    TmxImageLayer.cpp
     TmxLayer.cpp
     TmxMap.cpp
     TmxObject.cpp

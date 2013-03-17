@@ -1,3 +1,8 @@
+Version 0.13.3
+==============
+- Bump SFML v1.6 from -5 to -6 to fix VS20xx build issues
+- Fix TmxParser CMake build script
+
 Version 0.13.2
 ==============
 - Bump SFML v1.6 from -4 to -5 to fix ephemeral ports
