@@ -93,7 +93,7 @@ add_custom_command(
 
 # Step 3e: Add each library provided by this module as a dependency
 foreach(MODULE_LIB ${${EXTERNAL_NAME}_LIBS})
-  add_dependencies(INSTALL-${PROJECT_NAME} ${MODULE_LIB})
+  add_dependencies(INSTALL-${PROJECT_NAME} ${MODULE_LIB} luai luac)
 endforeach(MODULE_LIB ${${EXTERNAL_NAME}_LIBS})
 
 # Step 3f: Add example dependency for this module
@@ -102,6 +102,9 @@ if(LUA_BUILD_EXAMPLES)
     add_dependencies(INSTALL-${PROJECT_NAME} ${EXAMPLE_NAME})
   endforeach()
 endif(LUA_BUILD_EXAMPLES)
+
+# Step 3g: Add a few other dependencies specific to lua
+add_dependencies(INSTALL-${PROJECT_NAME} luai luac)
 
 # Step 4: Restore any global build settings changed
 set(BUILD_SHARED_LIBS ${OLD_BUILD_SHARED_LIBS})
