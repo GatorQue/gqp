@@ -1,3 +1,7 @@
+Version 0.14.1
+==============
+- Fix Lua include issue
+
 Version 0.14.0
 ==============
 + Added Lua external project module

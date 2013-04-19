@@ -59,7 +59,7 @@ if(LUA_ENABLED)
 
   # Define the include directory to reference for this external module
   set(FIND_INCLUDE_DIR
-    ${TOPLEVEL_DIR}/${EXTERNAL_OPTION_DIR})
+    ${TOPLEVEL_DIR}/${EXTERNAL_OPTION_DIR}/src)
 
   # Define the definitions that should used with this library
   set(FIND_DEFS ${LUA_DEFS})
