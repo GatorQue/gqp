@@ -33,7 +33,11 @@ set(LUA_COMPONENTS ${LUA_COMPONENTS} PARENT_SCOPE)
 
 # Create a list of definitions for projects to use
 if(LUA_SHARED_LIBRARIES)
-  set(LUA_DEFS -DLUA_BUILD_AS_DLL)
+  if(WINDOWS)
+    set(LUA_DEFS -DLUA_BUILD_AS_DLL)
+  else(WINDOWS)
+    set(LUA_DEFS)
+  endif(WINDOWS)
 else(LUA_SHARED_LIBRARIES)
   set(LUA_DEFS)
 endif(LUA_SHARED_LIBRARIES)

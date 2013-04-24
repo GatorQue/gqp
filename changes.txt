@@ -1,3 +1,7 @@
+Version 0.14.2
+==============
+- Fix Lua build issue with Linux
+
 Version 0.14.1
 ==============
 - Fix Lua include issue
