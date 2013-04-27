@@ -1,3 +1,7 @@
+Version 0.14.3
+==============
+- Fix Lua build issue with linking math libraries in Linux
+
 Version 0.14.2
 ==============
 - Fix Lua build issue with Linux

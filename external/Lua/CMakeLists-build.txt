@@ -163,8 +163,12 @@ if(WINDOWS AND COMPILER_GCC AND BUILD_STATIC_STD_LIBS)
     endif()
 endif()
 
-# link the target to its GQE dependencies
-target_link_libraries(luai lua)
+# link the target to its dependencies
+if(UNIX)
+    target_link_libraries(luai lua m)
+else(UNIX)
+    target_link_libraries(luai lua)
+endif(UNIX)
 
 # Add compiler target
 add_executable(luac ${LIB_SRC} ${COMPILER_SRC})
@@ -179,8 +183,12 @@ if(WINDOWS AND COMPILER_GCC AND BUILD_STATIC_STD_LIBS)
     endif()
 endif()
 
-# link the target to its GQE dependencies
-target_link_libraries(luac)
+# link the target to its dependencies
+if(UNIX)
+    target_link_libraries(luac m)
+else(UNIX)
+    target_link_libraries(luac)
+endif(UNIX)
 
 # add the install rule for this library
 install(TARGETS ${target} luai luac
