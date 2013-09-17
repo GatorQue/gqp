@@ -14,7 +14,7 @@ set_option(ZLIB_BUILD_EXAMPLES FALSE BOOL "Build 'zlib' examples?")
 
 # Determine which URL to use to obtain the ZLIB source files
 set_option(ZLIB_URL
-  "http://zlib.net/zlib-1.2.7.tar.gz"
+  "http://zlib.net/zlib-1.2.8.tar.gz"
   STRING
   "URL for getting latest 'zlib' version")
 
