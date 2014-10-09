@@ -6,6 +6,7 @@
 # 2012-02-11 Remove extra copy step, less duplication of files
 # 2012-03-23 Move to new directory and simplify handling of external projects
 # 2012-04-03 Fix case sensitive module name issues
+# 2014-10-08 Fix external module checking for better dependency support
 #
 
 # Create a project name for the external 3rd party project files
@@ -26,39 +27,34 @@ foreach(EXTERNAL_OPTION_DIR ${EXTERNAL_OPTIONS})
   include(${EXTERNAL_OPTION_DIR}/Options.cmake)
 endforeach()
 
-# Use get_subdirs macro to find all subdirectories with a CMakeLists.txt files
-get_subdirs(EXTERNAL_CMAKES "CMakeLists.txt")
+get_add_list_by_dependency(EXTERNAL_LIST)
 
-# Now add each subdirectory found
-foreach(EXTERNAL_CMAKE_DIR ${EXTERNAL_CMAKES})
+# Now include each Options.cmake file found
+foreach(EXTERNAL_CMAKE_DIR ${EXTERNAL_LIST})
+  message(STATUS "Adding external library '${EXTERNAL_CMAKE_DIR}'")
+
+  # Add the subdirectory target
+  add_subdirectory(${EXTERNAL_CMAKE_DIR})
+
   # Get the uppercase version of the subdirectory name
   string(TOUPPER ${EXTERNAL_CMAKE_DIR} EXTERNAL_NAME)
 
-  # First see if this module is enabled
-  if(${${EXTERNAL_NAME}_ENABLED})
-    # Now see if a prebuilt version already exists
-    find_package(${EXTERNAL_CMAKE_DIR} COMPONENTS ${${EXTERNAL_NAME}_COMPONENTS})
+  # Parse this modules library dependencies
+  parse_arguments(THIS "${${EXTERNAL_NAME}_DEPS}" "" ${${EXTERNAL_NAME}_LIB_DEPS})
 
-    # Force local module or local module the only one found?
-    if(NOT USE_PRECOMPILED_EXTERNAL OR ${EXTERNAL_NAME}_LOCAL)
-      # Add the subdirectory target if enabled
-      add_subdirectory(${EXTERNAL_CMAKE_DIR})
-
-      # Parse this modules library dependencies
-      parse_arguments(THIS "${${EXTERNAL_NAME}_DEPS}" "" ${${EXTERNAL_NAME}_LIB_DEPS})
-
-      # Loop through each library this module provides
-      foreach(MODULE_NAME ${${EXTERNAL_NAME}_LIBS})
-        # Loop through each dependency
-        foreach(MODULE_EXTERNAL_NAME ${${EXTERNAL_NAME}_DEPS})
-          # Loop through each dependent library for this module
-          foreach(LIBRARY_TARGET_NAME ${THIS_${MODULE_EXTERNAL_NAME}})
-            # Add a dependency for this library to our library
-            add_dependencies(${MODULE_NAME} ${LIBRARY_TARGET_NAME})
-          endforeach()
-        endforeach()
-      endforeach()
-    endif(NOT USE_PRECOMPILED_EXTERNAL OR ${EXTERNAL_NAME}_LOCAL)
-  endif(${${EXTERNAL_NAME}_ENABLED})
-endforeach(EXTERNAL_CMAKE_DIR ${EXTERNAL_CMAKES})
-
+  # Loop through each library this module provides
+  foreach(MODULE_NAME ${${EXTERNAL_NAME}_LIBS})
+    # Loop through each dependency
+    foreach(MODULE_EXTERNAL_NAME ${${EXTERNAL_NAME}_DEPS})
+      # Is this dependency a locally provided target?
+      string(TOUPPER ${MODULE_EXTERNAL_NAME} DEP_NAME)
+      if(NOT USE_PRECOMPILED_EXTERNAL OR ${DEP_NAME}_LOCAL)
+        # Loop through each dependent library for this module
+        foreach(LIBRARY_TARGET_NAME ${THIS_${MODULE_EXTERNAL_NAME}})
+          # Add a dependency for this library to our library
+          add_dependencies(${MODULE_NAME} ${LIBRARY_TARGET_NAME})
+        endforeach(LIBRARY_TARGET_NAME ${THIS_${MODULE_EXTERNAL_NAME}})
+      endif(NOT USE_PRECOMPILED_EXTERNAL OR ${DEP_NAME}_LOCAL)
+    endforeach(MODULE_EXTERNAL_NAME ${${EXTERNAL_NAME}_DEPS})
+  endforeach(MODULE_NAME ${${EXTERNAL_NAME}_LIBS})
+endforeach()

@@ -1,3 +1,9 @@
+Version 0.15.0
+==============
++ Added SDL external project module
++ Added Freetype external project module
+- Fix external project module dependency support
+
 Version 0.14.3
 ==============
 - Fix Lua build issue with linking math libraries in Linux

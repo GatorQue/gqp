@@ -9,6 +9,7 @@
 # 2012-03-01 Complete rewrite to allow for better Visual Studio build
 #   experience that shows all files and libraries.
 # 2012-05-25 Fix PROJECT_NAME issue
+# 2014-10-08 Add Freetype dependency support
 #
 
 # Define the project name (current directory)
@@ -21,6 +22,29 @@ if(NOT EXISTS ${TOPLEVEL_DIR}/${PROJECT_NAME})
     CloneGit(${SFML_URL}
       ${TOPLEVEL_DIR}/${PROJECT_NAME}
       ${SFML_REVISION_TAG})
+
+    if(WINDOWS)
+      # Step 1b: Remove freetype libraries already provided by GQP
+      execute_process(
+        COMMAND ${CMAKE_COMMAND} -E remove ${TOPLEVEL_DIR}/${PROJECT_NAME}/extlibs/libs-msvc/x86/freetype.lib
+        COMMAND ${CMAKE_COMMAND} -E remove ${TOPLEVEL_DIR}/${PROJECT_NAME}/extlibs/libs-msvc/x64/freetype.lib
+        COMMAND ${CMAKE_COMMAND} -E remove ${TOPLEVEL_DIR}/${PROJECT_NAME}/extlibs/libs-mingw/x86/libfreetype.a
+        COMMAND ${CMAKE_COMMAND} -E remove ${TOPLEVEL_DIR}/${PROJECT_NAME}/extlibs/libs-mingw/x64/libfreetype.a
+        COMMAND ${CMAKE_COMMAND} -E remove_directory ${TOPLEVEL_DIR}/${PROJECT_NAME}/extlibs/headers/libfreetype/windows
+      )
+      # Step 1c: Copy Freetype libraries already provided by GQP
+      if(FREETYPE_LOCAL)
+        # Copy local module FindFreetype.cmake file to SFML cmake modules directory
+        execute_process(
+          COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/Modules/FindFreetype.cmake ${TOPLEVEL_DIR}/${PROJECT_NAME}/cmake/Modules
+        )
+      else(FREETYPE_LOCAL)
+        # Copy 3rd party library FindFreetype.cmake file to SFML cmake modules directory
+        execute_process(
+          COMMAND ${CMAKE_COMMAND} -E copy ${EXTERNAL_MODULES_DIR}/FindFreetype.cmake ${TOPLEVEL_DIR}/${PROJECT_NAME}/cmake/Modules
+        )
+      endif(FREETYPE_LOCAL)
+    endif(WINDOWS)
   else(SFML_USE_LATEST)
     # Step 1a: Get the previous version
     DownloadFile(${SFML_URL}
@@ -90,6 +114,7 @@ add_custom_command(
   OUTPUT ${TOUCH_DIR}/${PROJECT_NAME}-complete
   COMMENT "Installing '${PROJECT_NAME}' libraries into '${EXTERNAL_DIR}'"
   COMMAND ${CMAKE_COMMAND} -DBUILD_TYPE=$<CONFIGURATION> -P cmake_install.cmake
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${EXTERNAL_MODULES_DIR}
   COMMAND ${CMAKE_COMMAND} ${COPY_SFML_BIN}
   COMMAND ${CMAKE_COMMAND} ${COPY_SFML_LIB}
   COMMAND ${CMAKE_COMMAND} ${COPY_SFML_INCLUDE}

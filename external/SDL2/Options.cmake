@@ -8,6 +8,7 @@
 # SDL2 library options
 set_option(SDL2_ENABLED TRUE BOOL "Build 'SDL2' 3rdparty/external libraries?")
 set_option(SDL2_SHARED_LIBRARIES TRUE BOOL "Build 'SDL2' shared libraries?")
+# SDL2 documentation is online only
 set_option(SDL2_BUILD_DOCS FALSE BOOL "Build 'SDL2' documentation?")
 set_option(SDL2_BUILD_EXAMPLES FALSE BOOL "Build 'SDL2' examples?")
 
