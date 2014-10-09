@@ -2,6 +2,7 @@
 # Description: Useful macros for building external libraries and sources.
 # Modification Log:
 # 2012-01-02 Initial version
+# 2014-10-08 Add get_add_list_by_dependency macro for better module checking.
 #
 
 # Name: get_subdirs
@@ -21,6 +22,62 @@ macro(get_subdirs retval filename)
   endforeach()
   set(${retval} ${dir-list})
 endmacro(get_subdirs)
+
+
+
+# Name: get_add_list_by_dependency
+# Description: Retrieve a list of external modules to include based on
+# dependency order.
+# Usage: get_add_list_by_dependency(list_returned_here external_dir)
+# Example: get_add_list_by_dependency(external-dir-list ${EXTERNAL_CMAKE_DIR})
+macro(get_add_list_by_dependency retval)
+  # Use get_subdirs macro to find all subdirectories with a CMakeLists.txt files
+  get_subdirs(CMAKE_LISTS "CMakeLists.txt")
+
+  # Return relative path to each directory found
+  set(add-list "")
+
+  # Now add each subdirectory found
+  foreach(CMAKE_LIST_DIR ${CMAKE_LISTS})
+    # Get the uppercase version of the subdirectory name
+    string(TOUPPER ${CMAKE_LIST_DIR} CMAKE_LIST_NAME)
+
+    # First see if this module is enabled and not already added
+    if(${${CMAKE_LIST_NAME}_ENABLED})
+      # Now see if a prebuilt version already exists
+      find_package(${CMAKE_LIST_DIR} COMPONENTS ${${CMAKE_LIST_NAME}_COMPONENTS})
+
+      # Force local module or local module the only one found?
+      if(NOT USE_PRECOMPILED_EXTERNAL OR ${CMAKE_LIST_NAME}_LOCAL)
+        # Parse this modules library dependencies
+        parse_arguments(THIS "${${CMAKE_LIST_NAME}_DEPS}" "" ${${CMAKE_LIST_NAME}_LIB_DEPS})
+
+        # Loop through each dependency
+        foreach(DEP_DIR ${${CMAKE_LIST_NAME}_DEPS})
+          # Get the uppercase version of the dependency directory name
+          string(TOUPPER ${DEP_DIR} DEP_NAME)
+
+          # See if a prebuilt version already exists for dependency
+          find_package(${DEP_DIR} COMPONENTS ${${DEP_NAME}_COMPONENTS})
+          
+          # Force local module or local module the only one found?
+          if(NOT USE_PRECOMPILED_EXTERNAL OR ${DEP_NAME}_LOCAL)
+            # Add dependencies to front of list
+            set(add-list ${DEP_DIR} ${add-list})
+          endif(NOT USE_PRECOMPILED_EXTERNAL OR ${DEP_NAME}_LOCAL)
+        endforeach()
+        
+        # Add this module to the back of the list
+        set(add-list ${add-list} ${CMAKE_LIST_DIR})
+      endif(NOT USE_PRECOMPILED_EXTERNAL OR ${CMAKE_LIST_NAME}_LOCAL)
+    endif(${${CMAKE_LIST_NAME}_ENABLED})
+    # Remove duplicates
+    list(REMOVE_DUPLICATES add-list)
+    # Set return result from list above
+    set(${retval} ${add-list})
+  endforeach(CMAKE_LIST_DIR ${CMAKE_LISTS})
+
+endmacro(get_add_list_by_dependency retval)
 
 # Name: set_option
 # Description: Set the CMAKE option to default if not found or to the value

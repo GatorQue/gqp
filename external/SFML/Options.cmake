@@ -3,6 +3,7 @@
 #   CMakeList.txt file.
 # Modification Log:
 # 2012-01-13 Initial version
+# 2014-10-08 Add Freetype dependency support
 #
 
 # SFML library options
@@ -67,12 +68,13 @@ set(SFML_DEFS ${SFML_DEFS} PARENT_SCOPE)
 set(SFML_STATIC_LIBRARIES ${SFML_STATIC_LIBRARIES} PARENT_SCOPE)
 
 # Create a list of external dependencies used by this external library
-set(SFML_DEPS)
+set(SFML_DEPS Freetype)
 # Push the list to the parent scope for projects to reference
 set(SFML_DEPS ${SFML_DEPS} PARENT_SCOPE)
 
 # Create a list of external library dependencies used by this external library
-set(SFML_LIB_DEPS)
+set(SFML_LIB_DEPS
+  Freetype freetype)
 # Push the list to the parent scope for projects to reference
 set(SFML_LIB_DEPS ${SFML_LIB_DEPS} PARENT_SCOPE)
 

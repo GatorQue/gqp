@@ -50,8 +50,8 @@ set(COPY_SDL2_LIB
   ${EXTERNAL_LIB_DIR})
 set(COPY_SDL2_INCLUDE
   -E copy_directory
-  ${PROJECT_BINARY_DIR}/install/include/${PROJECT_NAME}
-  ${EXTERNAL_INCLUDE_DIR}/${PROJECT_NAME})
+  ${PROJECT_BINARY_DIR}/install/include
+  ${EXTERNAL_INCLUDE_DIR})
 set(COPY_SDL2_DOC
   -E copy_directory
   ${TOPLEVEL_DIR}/${PROJECT_NAME}/doc
