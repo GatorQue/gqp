@@ -1,6 +1,7 @@
 Version 0.15.0
 ==============
 + Added SDL external project module
++ Added SDL2_ttf external project module
 + Added Freetype external project module
 - Fix external project module dependency support
 
