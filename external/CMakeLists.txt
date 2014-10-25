@@ -33,11 +33,11 @@ get_add_list_by_dependency(EXTERNAL_LIST)
 foreach(EXTERNAL_CMAKE_DIR ${EXTERNAL_LIST})
   message(STATUS "Adding external library '${EXTERNAL_CMAKE_DIR}'")
 
-  # Add the subdirectory target
-  add_subdirectory(${EXTERNAL_CMAKE_DIR})
-
   # Get the uppercase version of the subdirectory name
   string(TOUPPER ${EXTERNAL_CMAKE_DIR} EXTERNAL_NAME)
+
+  # Add the subdirectory target
+  add_subdirectory(${EXTERNAL_CMAKE_DIR})
 
   # Parse this modules library dependencies
   parse_arguments(THIS "${${EXTERNAL_NAME}_DEPS}" "" ${${EXTERNAL_NAME}_LIB_DEPS})

@@ -51,12 +51,12 @@ if(SDL2_ENABLED)
   # Define the libraries produced by this external module
 
   # Define the global list of libraries produced by this external module
-  set(FIND_LIBRARIES SDL2)
+  set(FIND_LIBRARIES SDL2 SDL2main)
 
   # Define the include directory to reference for this external module
   set(FIND_INCLUDE_DIR
-    ${TOPLEVEL_DIR}/${EXTERNAL_OPTION_DIR}
-    ${PROJECT_BINARY_DIR}/${EXTERNAL_OPTION_DIR}/clone)
+    ${TOPLEVEL_DIR}/${EXTERNAL_OPTION_DIR}/include
+    ${PROJECT_BINARY_DIR}/${EXTERNAL_OPTION_DIR}/clone/include)
 
   # Create the Find.cmake module for this external module
   configure_file(${PROJECT_SOURCE_DIR}/${EXTERNAL_OPTION_DIR}/FindModule.in

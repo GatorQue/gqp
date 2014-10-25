@@ -248,7 +248,6 @@ set_option(DIRECTX             "Use DirectX for Windows audio/video" ${WINDOWS})
 set_option(RENDER_D3D          "Enable the Direct3D render driver" ${WINDOWS})
 
 
-# The options below are for compatibility to configure's default behaviour.
 if(${BUILD_SHARED_LIBS})
   set(SDL_SHARED ON CACHE BOOL "Build a shared version of the library")
   set(SDL_STATIC OFF CACHE BOOL "Build a static version of the library")
